@@ -79,6 +79,19 @@ bool initPixelFormat(HDC hdc)
 }
 //--------------------------------------------------------------------
 
+void head_sphere()
+{
+	glTranslatef(0.0f, 0.15f, -0.5f);
+	glRotatef(90, 1.0, 0.0, 0.0);
+
+	GLUquadricObj* sphere = NULL;
+	sphere = gluNewQuadric();
+	glColor3f(0, 0, 1);
+	gluQuadricDrawStyle(sphere, GLU_LINE);
+	gluSphere(sphere, 0.29, 20, 20);
+	gluDeleteQuadric(sphere);
+}
+
 void body_cylinder()
 {
 	glTranslatef(0.0f, 0.15f, -0.5f);
@@ -101,6 +114,12 @@ void display()
 
 	glMatrixMode(GL_MODELVIEW);
 
+	//head
+	glPushMatrix();
+		head_sphere();
+	glPopMatrix();
+
+	//body
 	glPushMatrix();
 		body_cylinder();
 	glPopMatrix();
@@ -150,8 +169,8 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, 1.0, 1, 2000);
-	glFrustum(-2, 2, -2, 2, 1, 2000);
+	gluPerspective(30.0, 1.0, 1, 5000);
+	glFrustum(-2, 2, -2, 2, 1, 5000);
 	//glOrtho(-1, 1, -1, 1, 1, 100);
 
 	while (true)

@@ -88,7 +88,7 @@ void head_sphere()
 	sphere = gluNewQuadric();
 	glColor3f(0, 0, 1);
 	gluQuadricDrawStyle(sphere, GLU_LINE);
-	gluSphere(sphere, 0.29, 20, 20);
+	gluSphere(sphere, 2.95, 20, 20);
 	gluDeleteQuadric(sphere);
 }
 
@@ -102,49 +102,49 @@ void body_cylinder()
 	glColor3f(1, 0, 0);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.3, 0.3, 0.6, 20, 20);
+	gluCylinder(cylinder, 3.0, 3.0, 6.0, 20, 20);
 	gluDeleteQuadric(cylinder);
 }
 
 void body_bottom()
 {
 	glRotatef(90, 1, 0, 0);
-	glTranslatef(0.0f, 0.0f, 0.35f);
+	glTranslatef(0.0f, 0.0f, 5.7f);
 
 	GLUquadricObj* cylinder = NULL;
 	cylinder = gluNewQuadric();
 	glColor3f(1, 0, 0);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.3, 0.25, 0.1, 20, 10);
+	gluCylinder(cylinder, 3.0, 2.5, 1.0, 20, 10);
 	gluDeleteQuadric(cylinder);
 }
 
 void join_cylinderleft()
 {
 	glRotatef(270, 0, 1.0, 0);
-	glTranslatef(0.0f, 0.1f, 0.23f);
+	glTranslatef(0.0f, -1.0f, 2.3f);
 
 	GLUquadricObj* cylinder = NULL;
 	cylinder = gluNewQuadric();
 	glColor3f(0, 1, 0);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.05, 0.05, 0.15, 10, 10);
+	gluCylinder(cylinder, 0.5, 0.5, 1.5, 10, 10);
 	gluDeleteQuadric(cylinder);
 }
 
 void join_cylinderright()
 {
 	glRotatef(90, 0, 1.0, 0);
-	glTranslatef(0.0f, 0.1f, 0.23f);
+	glTranslatef(0.0f, -1.0f, 2.3f);
 
 	GLUquadricObj* cylinder = NULL;
 	cylinder = gluNewQuadric();
 	glColor3f(0, 1, 0);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.05, 0.05, 0.15, 10, 10);
+	gluCylinder(cylinder, 0.5, 0.5, 1.5, 10, 10);
 	gluDeleteQuadric(cylinder);
 }
 
@@ -152,8 +152,6 @@ void left_leg()
 {
 	
 }
-
-
 
 void display()
 {
@@ -196,15 +194,15 @@ void display()
 	// draw line for x axis
 	glColor3f(1.0, 0.0, 0.0);
 	glVertex3f(0.0, 0.0, 0.0);
-	glVertex3f(1.0, 0.0, 0.0);
+	glVertex3f(10.0, 0.0, 0.0);
 	// draw line for y axis
 	glColor3f(0.0, 1.0, 0.0);
 	glVertex3f(0.0, 0.0, 0.0);
-	glVertex3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 10.0, 0.0);
 	// draw line for Z axis
 	glColor3f(0.0, 0.0, 1.0);
 	glVertex3f(0.0, 0.0, 0.0);
-	glVertex3f(0.0, 0.0, 1.0);
+	glVertex3f(0.0, 0.0, 10.0);
 	glEnd();
 	// load the previous matrix
 	glPopMatrix();
@@ -257,7 +255,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	glLoadIdentity();
 	/*gluPerspective(40.0, 1.0, 1, 5000);
 	glFrustum(-2, 2, -2, 2, 1, 5000);*/
-	glOrtho(-1, 1, -1, 1, -1, 1);
+	glOrtho(-10, 10, -10, 10, -10, 10);
 
 	while (true)
 	{

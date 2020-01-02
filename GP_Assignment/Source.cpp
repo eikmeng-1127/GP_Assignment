@@ -81,7 +81,7 @@ bool initPixelFormat(HDC hdc)
 
 void head_sphere()
 {
-	glTranslatef(0.0f, 0.15f, -0.5f);
+	glTranslatef(0.0f, 0.25f, -0.5f);
 	glRotatef(90, 1.0, 0.0, 0.0);
 
 	GLUquadricObj* sphere = NULL;
@@ -94,7 +94,7 @@ void head_sphere()
 
 void body_cylinder()
 {
-	glTranslatef(0.0f, 0.15f, -0.5f);
+	glTranslatef(0.0f, 0.25f, -0.5f);
 	glRotatef(90, 1.0, 0.0, 0.0);
 
 	GLUquadricObj* cylinder = NULL;
@@ -102,8 +102,41 @@ void body_cylinder()
 	glColor3f(1, 0, 0);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.3, 0.3, 0.5, 20, 20);
+	gluCylinder(cylinder, 0.3, 0.3, 0.6, 20, 20);
 	gluDeleteQuadric(cylinder);
+}
+
+void join_cylinderleft()
+{
+	glRotatef(270, 0, 1.0, 0);
+	glTranslatef(-0.5f, 0.1f, 0.25f);
+
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3f(0, 1, 0);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluCylinder(cylinder, 0.05, 0.05, 0.15, 10, 10);
+	gluDeleteQuadric(cylinder);
+}
+
+void join_cylinderright()
+{
+	glRotatef(90, 0, 1.0, 0);
+	glTranslatef(0.5f, 0.1f, 0.25f);
+
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3f(0, 1, 0);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluCylinder(cylinder, 0.05, 0.05, 0.15, 10, 10);
+	gluDeleteQuadric(cylinder);
+}
+
+void left_leg()
+{
+	
 }
 
 void display()
@@ -123,6 +156,17 @@ void display()
 	glPushMatrix();
 		body_cylinder();
 	glPopMatrix();
+
+	glPushMatrix();
+		glPushMatrix();
+			join_cylinderleft();
+		glPopMatrix();
+
+		glPushMatrix();
+			join_cylinderright();
+		glPopMatrix();
+	glPopMatrix();
+
 }
 //--------------------------------------------------------------------
 
@@ -169,7 +213,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30.0, 1.0, 1, 5000);
+	gluPerspective(40.0, 1.0, 1, 5000);
 	glFrustum(-2, 2, -2, 2, 1, 5000);
 	//glOrtho(-1, 1, -1, 1, 1, 100);
 

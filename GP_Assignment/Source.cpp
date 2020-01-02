@@ -153,6 +153,8 @@ void left_leg()
 	
 }
 
+
+
 void display()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -184,6 +186,27 @@ void display()
 		glPushMatrix();
 			join_cylinderright();
 		glPopMatrix();
+	glPopMatrix();
+
+
+	//Show direction
+	glPushMatrix();
+	// draw our axes
+	glBegin(GL_LINES);
+	// draw line for x axis
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(1.0, 0.0, 0.0);
+	// draw line for y axis
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 1.0, 0.0);
+	// draw line for Z axis
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(0.0, 0.0, 0.0);
+	glVertex3f(0.0, 0.0, 1.0);
+	glEnd();
+	// load the previous matrix
 	glPopMatrix();
 
 }

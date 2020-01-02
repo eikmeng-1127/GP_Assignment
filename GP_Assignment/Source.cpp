@@ -21,9 +21,21 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE) 
 			PostQuitMessage(0);
-		else if (wParam == 'A')
+		else if (wParam == VK_UP)
 		{
-
+			glRotatef(5, -1.0, 0.0, 0.0);
+		}
+		else if (wParam == VK_DOWN)
+		{
+			glRotatef(5, 1.0, 0.0, 0.0);
+		}
+		else if (wParam == VK_LEFT)
+		{
+			glRotatef(5, 0.0, -1.0, 0.0);
+		}
+		else if (wParam == VK_RIGHT)
+		{
+			glRotatef(5, 0.0, 1.0, 0.0);
 		}
 		break;
 
@@ -67,13 +79,31 @@ bool initPixelFormat(HDC hdc)
 }
 //--------------------------------------------------------------------
 
+void body_cylinder()
+{
+	glTranslatef(0.0f, 0.15f, -0.5f);
+	glRotatef(90, 1.0, 0.0, 0.0);
+
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3f(1, 0, 0);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluCylinder(cylinder, 0.3, 0.3, 0.5, 20, 20);
+	gluDeleteQuadric(cylinder);
+}
+
 void display()
 {
-	glClearColor(0.0, 0.5, 1.0, 0.0);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 
+	glMatrixMode(GL_MODELVIEW);
 
+	glPushMatrix();
+		body_cylinder();
+	glPopMatrix();
 }
 //--------------------------------------------------------------------
 
@@ -91,7 +121,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	if (!RegisterClassEx(&wc)) return false;
 
 	HWND hWnd = CreateWindow(WINDOW_TITLE, WINDOW_TITLE, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, CW_USEDEFAULT, 900, 900,
+		CW_USEDEFAULT, CW_USEDEFAULT, 1000, 1000,
 		NULL, NULL, wc.hInstance, NULL);
 
 	//--------------------------------
@@ -117,6 +147,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(30.0, 1.0, 1, 2000);
+	glFrustum(-2, 2, -2, 2, 1, 2000);
+	//glOrtho(-1, 1, -1, 1, 1, 100);
 
 	while (true)
 	{

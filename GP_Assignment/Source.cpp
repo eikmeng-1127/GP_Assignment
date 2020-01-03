@@ -349,6 +349,148 @@ void rectangle_5(double h)
 	glVertex3f(-1.0f, 0.0f - h, 1.5f);
 	glEnd();
 }
+
+//rectangle under rectangle_5
+void rectangle_6()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-1.0f, 1.0f, -1.5f);
+	glVertex3f(-1.0f, 1.0f, 1.5f);
+	glVertex3f(0.5f, 1.0f, 1.5f);
+	glVertex3f(0.5f, 1.0f, -1.5f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.5f, 1.0f, -1.5f);
+	glVertex3f(-1.0f, 1.0f, -1.5f);
+	glVertex3f(-0.8f, 0.6f, -1.2f);
+	glVertex3f(0.5f, 0.6f, -1.2f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.5f, 0.6f, -1.2f);
+	glVertex3f(0.5f, 1.0f, -1.5f);
+	glVertex3f(0.5f, 1.0f, 1.5f);
+	glVertex3f(0.5f, 0.6f, 1.2f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.5f, 0.6f, 1.2f);
+	glVertex3f(0.5f, 0.6f, -1.2f);
+	glVertex3f(-0.8f, 0.6f, -1.2f);
+	glVertex3f(-0.8f, 0.6f, 1.2f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-0.8f, 0.6f, 1.2f);
+	glVertex3f(-0.8f, 0.6f, -1.2f);
+	glVertex3f(-1.0f, 1.0f, -1.5f);
+	glVertex3f(-1.0f, 1.0f, 1.5f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-1.0f, 1.0f, 1.5f);
+	glVertex3f(0.5f, 1.0f, 1.5f);
+	glVertex3f(0.5f, 0.6f, 1.2f);
+	glVertex3f(-0.8f, 0.6f, 1.2f);
+	glEnd();
+}
+
+void quadforcenterleg()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-0.8f, 1.0f, -0.8f);
+	glVertex3f(-0.8f, 1.0f, 0.8f);
+	glVertex3f(0.8f, 1.0f, 0.8f);
+	glVertex3f(0.8f, 1.0f, -0.8f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.8f, 1.0f, -0.8f);
+	glVertex3f(-0.8f, 1.0f, -0.8f);
+	glVertex3f(-1.0f, -0.5f, -1.2f);
+	glVertex3f(1.0f, -0.5f, -1.2f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(1.0f, -0.5f, -1.2f);
+	glVertex3f(0.8f, 1.0f, -0.8f);
+	glVertex3f(0.8f, 1.0f, 0.8f);
+	glVertex3f(1.0f, -0.5f, 1.2f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(1.0f, -0.5f, 1.2f);
+	glVertex3f(1.0f, -0.5f, -1.2f);
+	glVertex3f(-1.0f, -0.5f, -1.2f);
+	glVertex3f(-1.0f, -0.5f, 1.22f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-1.0f, -0.5f, 1.2f);
+	glVertex3f(-1.0f, -0.5f, -1.2f);
+	glVertex3f(-0.8f, 1.0f, -0.8f);
+	glVertex3f(-0.8f, 1.0f, 0.8f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-0.8f, 1.0f, 0.8f);
+	glVertex3f(0.8f, 1.0f, 0.8f);
+	glVertex3f(1.0f, -0.5f, 1.2f);
+	glVertex3f(-1.0f, -0.5f, 1.2f);
+	glEnd();
+}
+
+void quadforcenterleg_2()
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-1.0f, 1.0f, -1.2f);
+	glVertex3f(-1.0f, 1.0f, 1.2f);
+	glVertex3f(1.0f, 1.0f, 1.2f);
+	glVertex3f(1.0f, 1.0f, -1.2f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(1.0f, 1.0f, -1.2f);
+	glVertex3f(-1.0f, 1.0f, -1.2f);
+	glVertex3f(-0.8f, 0.6f, -0.8f);
+	glVertex3f(0.8f, 0.6f, -0.8f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.8f, 0.6f, -0.8f);
+	glVertex3f(1.0f, 1.0f, -1.2f);
+	glVertex3f(1.0f, 1.0f, 1.2f);
+	glVertex3f(0.8f, 0.6f, 0.8f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.8f, 0.6f, 0.8f);
+	glVertex3f(0.8f, 0.6f, -0.8f);
+	glVertex3f(-0.8f, 0.6f, -0.8f);
+	glVertex3f(-0.8f, 0.6f, 0.8f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-0.8f, 0.6f, 0.8f);
+	glVertex3f(-0.8f, 0.6f, -0.8f);
+	glVertex3f(-1.0f, 1.0f, -1.2f);
+	glVertex3f(-1.0f, 1.0f, 1.2f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-1.0f, 1.0f, 1.2f);
+	glVertex3f(1.0f, 1.0f, 1.2f);
+	glVertex3f(0.8f, 0.6f, 0.8f);
+	glVertex3f(-0.8f, 0.6f, 0.8f);
+	glEnd();
+}
 //------------------------------
 
 
@@ -394,10 +536,26 @@ void body_bottom()
 	gluCylinder(cylinder, 3.0, 2.5, 1.0, 20, 5);
 	gluDeleteQuadric(cylinder);
 }
+
+void center_leg_connector()
+{
+	glTranslatef(0.0f, -6.0f, 0.0f);
+	glRotatef(90, 1.0, 0.0, 0.0);
+
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3f(1, 0, 1);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluCylinder(cylinder, 0.5, 0.5, 1.5, 20, 5);
+	gluDeleteQuadric(cylinder);
+}
+
 //-------------------------------
 
 
 
+//-----------------------------Combined Leg shapes
 void left_leg()
 {
 	//top cylinder
@@ -435,7 +593,24 @@ void left_leg()
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -8.0f, 0.0f);
-		rectangle_5(0);
+		rectangle_5(0.5);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(-3.7f, -9.5f, 0.0f);
+		rectangle_6();
+	glPopMatrix();
+
+	glPushMatrix();
+		glRotatef(270, 0, 1.0, 0);
+		glTranslatef(0.0f, -8.3f, 3.4f);
+
+		GLUquadricObj* cylinder2 = NULL;
+		cylinder2 = gluNewQuadric();
+		glColor3f(0, 1, 0);
+		gluQuadricDrawStyle(cylinder2, GLU_LINE);
+		gluCylinder(cylinder2, 0.9, 0.9, 0.9, 20, 5);
+		gluDeleteQuadric(cylinder2);
 	glPopMatrix();
 }
 
@@ -478,9 +653,53 @@ void right_leg()
 	glPushMatrix();
 		glTranslatef(3.7f, -8.0f, 0.0f);
 		glRotatef(180, 0, 1, 0);
-		rectangle_5(0);
+		rectangle_5(0.5);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(3.7f, -9.5f, 0.0f);
+		glRotatef(180, 0, 1, 0);
+		rectangle_6();
+	glPopMatrix();
+
+	glPushMatrix();
+		glRotatef(90, 0, 1.0, 0);
+		glTranslatef(0.0f, -8.3f, 3.4f);
+
+		GLUquadricObj* cylinder2 = NULL;
+		cylinder2 = gluNewQuadric();
+		glColor3f(0, 1, 0);
+		gluQuadricDrawStyle(cylinder2, GLU_LINE);
+		gluCylinder(cylinder2, 0.9, 0.9, 0.9, 20, 5);
+		gluDeleteQuadric(cylinder2);
 	glPopMatrix();
 }
+
+void center_leg()
+{
+	glPushMatrix();
+		glTranslatef(0.0f, -8.0f, 0.0f);
+		quadforcenterleg();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(0.0f, -9.5f, 0.0f);
+		quadforcenterleg_2();
+	glPopMatrix();
+
+	glPushMatrix();
+		glRotatef(90.0, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, -0.45);
+
+		GLUquadricObj* cylinder2 = NULL;
+		cylinder2 = gluNewQuadric();
+		glColor3f(0, 1, 0);
+		gluQuadricDrawStyle(cylinder2, GLU_LINE);
+		gluCylinder(cylinder2, 0.9, 0.9, 0.9, 20, 5);
+		gluDeleteQuadric(cylinder2);
+	glPopMatrix();
+}
+//-----------------------------
 
 
 
@@ -504,6 +723,14 @@ void display()
 
 	glPushMatrix();
 		body_bottom();
+	glPopMatrix();
+
+	glPushMatrix();
+		center_leg_connector();
+	glPopMatrix();
+
+	glPushMatrix();
+		center_leg();
 	glPopMatrix();
 
 	//kaki

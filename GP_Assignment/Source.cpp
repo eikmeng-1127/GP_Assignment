@@ -68,14 +68,22 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'V')
 		{
-			if (gunrotate == 360.0)
+			if (gunmove <= 3.5f)
 			{
 				break;
 			}
 			else
 			{
-				gunrotate += 2.0;
+				if (gunrotate == 360.0)
+				{
+					break;
+				}
+				else
+				{
+					gunrotate += 2.0;
+				}
 			}
+			
 		}
 		else if (wParam == 'B')
 		{
@@ -833,6 +841,17 @@ void gg_connnector() {
 	glPopMatrix();
 }
 
+void gg_head()
+{
+
+	GLUquadricObj* sphere = NULL;
+	sphere = gluNewQuadric();
+	glColor3f(0, 0, 1);
+	gluQuadricDrawStyle(sphere, GLU_LINE);
+	gluSphere(sphere, 0.9, 20, 10);
+	gluDeleteQuadric(sphere);
+}
+
 void gatlingGun() {
 	glPushMatrix();
 		glTranslatef(0.0f, gunmove, 0.0f);
@@ -840,6 +859,7 @@ void gatlingGun() {
 		gg_barrels();
 		gg_body();
 		gg_connnector();
+		gg_head();
 	glPopMatrix();
 }
 

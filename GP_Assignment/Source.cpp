@@ -701,7 +701,106 @@ void center_leg()
 }
 //-----------------------------
 
+//-----------------------------Gatling gun
+void gg_mainbarrel() {
+	glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 1.5f);
+		//glRotatef(90, 1.0, 0.0, 0.0);
 
+		GLUquadricObj* cylinder = NULL;
+		cylinder = gluNewQuadric();
+		glColor3f(1, 0, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(cylinder, GLU_LINE);
+		gluCylinder(cylinder, 0.2, 0.2, 5, 20, 5);
+		gluDeleteQuadric(cylinder);
+	glPopMatrix();
+}
+
+void gg_sidebarrels() {
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 2.0f);
+	for (int i = 0; i <= 6; i++) {
+		glRotatef(60, 0.0f, 0.0f, 1.0f);
+		glPushMatrix();
+		glTranslatef(0.0f, 0.5f, 0.0f);
+		GLUquadricObj* cylinder = NULL;
+		cylinder = gluNewQuadric();
+		glColor3f(1, 0, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(cylinder, GLU_LINE);
+		gluCylinder(cylinder, 0.2, 0.2, 5, 20, 5);
+		gluDeleteQuadric(cylinder);
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+void gg_barrelholder() {
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 6.0f);
+	//glRotatef(90, 1.0, 0.0, 0.0);
+
+	GLUquadricObj* cylinder = NULL;
+	cylinder = gluNewQuadric();
+	glColor3f(1, 0, 1);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(cylinder, GLU_LINE);
+	gluCylinder(cylinder, 0.75, 0.75, 0.5, 20, 5);
+	gluDeleteQuadric(cylinder);
+	glPopMatrix();
+}
+
+void gg_barrels() {
+	glPushMatrix();
+		gg_mainbarrel();
+		gg_sidebarrels();
+		gg_barrelholder();
+	glPopMatrix();
+}
+
+void gg_body() {
+	glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 1.0f);
+		//glRotatef(90, 1.0, 0.0, 0.0);
+
+		GLUquadricObj* cylinder = NULL;
+		cylinder = gluNewQuadric();
+		glColor3f(1, 0, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(cylinder, GLU_LINE);
+		gluCylinder(cylinder, 0.75, 0.75, 2, 20, 5);
+		gluDeleteQuadric(cylinder);
+	glPopMatrix();
+}
+
+void gg_connnector() {
+	glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 0.0f);
+		//glRotatef(90, 1.0, 0.0, 0.0);
+
+		GLUquadricObj* cylinder = NULL;
+		cylinder = gluNewQuadric();
+		glColor3f(1, 0, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(cylinder, GLU_LINE);
+		gluCylinder(cylinder, 0.5, 0.5, 2, 20, 5);
+		gluDeleteQuadric(cylinder);
+	glPopMatrix();
+}
+
+void gatlingGun() {
+	glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 5.0f);
+		glRotatef(180, 1.0, 0.0, 0.0);
+		//glRotatef(90, 1.0, 0.0, 0.0);
+		gg_barrels();
+		gg_body();
+		gg_connnector();
+	glPopMatrix();
+}
+
+//-----------------------------
 
 void display()
 {
@@ -714,6 +813,7 @@ void display()
 	//head
 	glPushMatrix();
 		head_sphere();
+		gatlingGun();
 	glPopMatrix();
 
 	//body

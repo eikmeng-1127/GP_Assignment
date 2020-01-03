@@ -709,7 +709,7 @@ void gg_mainbarrel() {
 
 		GLUquadricObj* cylinder = NULL;
 		cylinder = gluNewQuadric();
-		glColor3f(1, 0, 1);
+		glColor3f(1, 1, 0);
 		//gluQuadricTexture(cylinder, TRUE);
 		gluQuadricDrawStyle(cylinder, GLU_LINE);
 		gluCylinder(cylinder, 0.2, 0.2, 5, 20, 5);
@@ -726,7 +726,7 @@ void gg_sidebarrels() {
 		glTranslatef(0.0f, 0.5f, 0.0f);
 		GLUquadricObj* cylinder = NULL;
 		cylinder = gluNewQuadric();
-		glColor3f(1, 0, 1);
+		glColor3f(0, 1, 1);
 		//gluQuadricTexture(cylinder, TRUE);
 		gluQuadricDrawStyle(cylinder, GLU_LINE);
 		gluCylinder(cylinder, 0.2, 0.2, 5, 20, 5);
@@ -743,7 +743,7 @@ void gg_barrelholder() {
 
 	GLUquadricObj* cylinder = NULL;
 	cylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
+	glColor3f(1, 1, 0);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(cylinder, GLU_LINE);
 	gluCylinder(cylinder, 0.75, 0.75, 0.5, 20, 5);
@@ -766,7 +766,7 @@ void gg_body() {
 
 		GLUquadricObj* cylinder = NULL;
 		cylinder = gluNewQuadric();
-		glColor3f(1, 0, 1);
+		glColor3f(1, 0, 0);
 		//gluQuadricTexture(cylinder, TRUE);
 		gluQuadricDrawStyle(cylinder, GLU_LINE);
 		gluCylinder(cylinder, 0.75, 0.75, 2, 20, 5);

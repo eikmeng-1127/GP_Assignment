@@ -142,7 +142,7 @@ void rectangle_1(double h)
 	glVertex3f(-0.5f, 0.0f - h, -1.0f);
 	glVertex3f(-0.5f, 0.0f - h, 1.0f);
 
-	//right
+	//left
 	//glColor3f(1, 1, 0);
 	glVertex3f(-0.5f, 0.0f - h, 1.0f);
 	glVertex3f(-0.5f, 0.0f - h, -1.0f);
@@ -238,7 +238,7 @@ void rectangle_3(double h)
 	glVertex3f(-0.5f, 0.0f - h, -0.5f);
 	glVertex3f(-0.5f, 0.0f - h, 0.5f);
 
-	//right
+	//left
 	//glColor3f(1, 1, 0);
 	glVertex3f(-0.5f, 0.0f - h, 0.5f);
 	glVertex3f(-0.5f, 0.0f - h, -0.5f);
@@ -254,6 +254,7 @@ void rectangle_3(double h)
 	glEnd();
 }
 
+//rectangle under rectangle_3
 void rectangle_4(double h)
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -285,7 +286,7 @@ void rectangle_4(double h)
 	glVertex3f(-0.6f, 0.0f - h, -0.6f);
 	glVertex3f(-0.6f, 0.0f - h, 0.6f);
 
-	//right
+	//left
 	//glColor3f(1, 1, 0);
 	glVertex3f(-0.6f, 0.0f - h, 0.6f);
 	glVertex3f(-0.6f, 0.0f - h, -0.6f);
@@ -301,9 +302,52 @@ void rectangle_4(double h)
 	glEnd();
 }
 
-void rectangle_5()
+//rectangle under rectangle_4
+void rectangle_5(double h)
 {
-	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-0.6f, 1.0f, -0.6f);
+	glVertex3f(-0.6f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 1.0f, -0.6f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.5f, 1.0f, -0.6f);
+	glVertex3f(-0.6f, 1.0f, -0.6f);
+	glVertex3f(-1.0f, 0.0f - h, -1.5f);
+	glVertex3f(0.5f, 0.0f - h, -1.5f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.5f, 0.0f - h, -1.5f);
+	glVertex3f(0.5f, 1.0f, -0.6f);
+	glVertex3f(0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 0.0f - h, 1.5f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.5f, 0.0f - h, 1.5f);
+	glVertex3f(0.5f, 0.0f - h, -1.5f);
+	glVertex3f(-1.0f, 0.0f - h, -1.5f);
+	glVertex3f(-1.0f, 0.0f - h, 1.5f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-1.0f, 0.0f - h, 1.5f);
+	glVertex3f(-1.0f, 0.0f - h, -1.5f);
+	glVertex3f(-0.6f, 1.0f, -0.6f);
+	glVertex3f(-0.6f, 1.0f, 0.6f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-0.6f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 0.0f - h, 1.5f);
+	glVertex3f(-1.0f, 0.0f - h, 1.5f);
+	glEnd();
 }
 //------------------------------
 
@@ -381,12 +425,17 @@ void left_leg()
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -4.5f, 0.0f);
-		rectangle_3(1.0);
+		rectangle_3(1.5);
 	glPopMatrix();
 
 	glPushMatrix();
-		glTranslatef(-3.7f, -6.5f, 0.0f);
+		glTranslatef(-3.7f, -7.0f, 0.0f);
 		rectangle_4(0);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(-3.7f, -8.0f, 0.0f);
+		rectangle_5(0);
 	glPopMatrix();
 }
 
@@ -417,13 +466,19 @@ void right_leg()
 
 	glPushMatrix();
 		glTranslatef(3.7f, -4.5f, 0.0f);
-		rectangle_3(1.0);
+		rectangle_3(1.5);
 	glPopMatrix();
 
 	glPushMatrix();
-		glTranslatef(3.7f, -6.5f, 0.0f);
+		glTranslatef(3.7f, -7.0f, 0.0f);
 		glRotatef(180, 0, 1, 0);
 		rectangle_4(0);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(3.7f, -8.0f, 0.0f);
+		glRotatef(180, 0, 1, 0);
+		rectangle_5(0);
 	glPopMatrix();
 }
 
@@ -437,19 +492,19 @@ void display()
 
 	glMatrixMode(GL_MODELVIEW);
 
-	////head
-	//glPushMatrix();
-	//	head_sphere();
-	//glPopMatrix();
+	//head
+	glPushMatrix();
+		head_sphere();
+	glPopMatrix();
 
-	////body
-	//glPushMatrix();
-	//	body_cylinder();
-	//glPopMatrix();
+	//body
+	glPushMatrix();
+		body_cylinder();
+	glPopMatrix();
 
-	//glPushMatrix();
-	//	body_bottom();
-	//glPopMatrix();
+	glPushMatrix();
+		body_bottom();
+	glPopMatrix();
 
 	//kaki
 	glPushMatrix();

@@ -12,6 +12,9 @@
 GLfloat gunmove = -5.0f;
 GLfloat gunrotate = 270.0f;
 
+boolean activategun = false;
+boolean rotategun = false;
+
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -46,54 +49,24 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'N')
 		{
-			if (gunmove >= 3.5f)
+			if (activategun == true)
 			{
-				break;
+				activategun = false;
 			}
-			else
+			else 
 			{
-				gunmove += 0.2;
+				activategun = true;
 			}
 		}
 		else if (wParam == 'M')
 		{
-			if (gunmove == -5.0f)
+			if (rotategun == true) 
 			{
-				break;
-			}
-			else 
-			{
-				gunmove -= 0.2;
-			}
-		}
-		else if (wParam == 'V')
-		{
-			if (gunmove <= 3.5f)
-			{
-				break;
+				rotategun = false;
 			}
 			else
 			{
-				if (gunrotate == 360.0)
-				{
-					break;
-				}
-				else
-				{
-					gunrotate += 2.0;
-				}
-			}
-			
-		}
-		else if (wParam == 'B')
-		{
-			if (gunrotate == 270.0)
-			{
-				break;
-			}
-			else
-			{
-				gunrotate -= 2.0;
+				rotategun = true;
 			}
 		}
 		break;
@@ -999,6 +972,38 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+		}
+
+		if (activategun == true)
+		{
+			if (gunmove < 3.5f)
+			{
+				gunmove += 0.1;
+			}
+		}
+
+		if (activategun == false)
+		{
+			if (gunmove > (-5.0f))
+			{
+				gunmove -= 0.1;
+			}
+		}
+
+		if (rotategun == true)
+		{
+			if (gunrotate < 360.0f)
+			{
+				gunrotate += 1.0f;
+			}
+		}
+
+		if (rotategun == false)
+		{
+			if (gunrotate > 270.0f)
+			{
+				gunrotate -= 1.0f;
+			}
 		}
 
 		display();

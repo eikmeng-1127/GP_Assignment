@@ -46,19 +46,47 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'N')
 		{
-			gunmove += 0.2;
+			if (gunmove >= 3.5f)
+			{
+				break;
+			}
+			else
+			{
+				gunmove += 0.2;
+			}
 		}
 		else if (wParam == 'M')
 		{
-			gunmove -= 0.2;
+			if (gunmove == -5.0f)
+			{
+				break;
+			}
+			else 
+			{
+				gunmove -= 0.2;
+			}
 		}
 		else if (wParam == 'V')
 		{
-			gunrotate += 1.0;
+			if (gunrotate == 360.0)
+			{
+				break;
+			}
+			else
+			{
+				gunrotate += 2.0;
+			}
 		}
 		else if (wParam == 'B')
 		{
-			gunrotate -= 1.0;
+			if (gunrotate == 270.0)
+			{
+				break;
+			}
+			else
+			{
+				gunrotate -= 2.0;
+			}
 		}
 		break;
 

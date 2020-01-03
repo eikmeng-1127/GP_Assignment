@@ -11,6 +11,7 @@
 
 GLfloat gunmove = -5.0f;
 GLfloat gunrotate = 270.0f;
+GLfloat legmove = 2.5f;
 
 boolean activategun = false;
 boolean rotategun = false;
@@ -53,20 +54,42 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			{
 				activategun = false;
 			}
-			else 
+			else
 			{
 				activategun = true;
 			}
 		}
 		else if (wParam == 'M')
 		{
-			if (rotategun == true) 
+			if (rotategun == true)
 			{
 				rotategun = false;
 			}
 			else
 			{
 				rotategun = true;
+			}
+		}
+		else if (wParam == 'Z')
+		{
+			if (legmove > 2.5f)
+			{
+				break;
+			}
+			else
+			{
+				legmove += 0.1;
+			}
+		}
+		else if (wParam == 'X')
+		{
+			if (legmove < 0.0f)
+			{
+				break;
+			}
+			else
+			{
+				legmove -= 0.1;
 			}
 		}
 		break;
@@ -426,6 +449,53 @@ void rectangle_6()
 	glEnd();
 }
 
+void rectangle_7(double h)
+{
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-0.5f, 1.0f, -0.4f);
+	glVertex3f(-0.5f, 1.0f, 0.4f);
+	glVertex3f(0.5f, 1.0f, 0.4f);
+	glVertex3f(0.5f, 1.0f, -0.4f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.5f, 1.0f, -0.4f);
+	glVertex3f(-0.5f, 1.0f, -0.4f);
+	glVertex3f(-0.5f, 0.0f - h, -0.4f);
+	glVertex3f(0.5f, 0.0f - h, -0.4f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.5f, 0.0f - h, -0.4f);
+	glVertex3f(0.5f, 1.0f, -0.4f);
+	glVertex3f(0.5f, 1.0f, 0.4f);
+	glVertex3f(0.5f, 0.0f - h, 0.4f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.5f, 0.0f - h, 0.4f);
+	glVertex3f(0.5f, 0.0f - h, -0.4f);
+	glVertex3f(-0.5f, 0.0f - h, -0.4f);
+	glVertex3f(-0.5f, 0.0f - h, 0.4f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-0.5f, 0.0f - h, 0.4f);
+	glVertex3f(-0.5f, 0.0f - h, -0.4f);
+	glVertex3f(-0.5f, 1.0f, -0.4f);
+	glVertex3f(-0.5f, 1.0f, 0.4f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-0.5f, 1.0f, 0.4f);
+	glVertex3f(0.5f, 1.0f, 0.4f);
+	glVertex3f(0.5f, 0.0f - h, 0.4f);
+	glVertex3f(-0.5f, 0.0f - h, 0.4f);
+	glEnd();
+}
+
 void quadforcenterleg()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -630,6 +700,11 @@ void left_leg()
 	glPopMatrix();
 
 	glPushMatrix();
+		glTranslatef(-4.0f, -3.0f, 0.0f);
+		rectangle_7(2.5);
+	glPopMatrix();
+
+	glPushMatrix();
 		glRotatef(270, 0, 1.0, 0);
 		glTranslatef(0.0f, -8.3f, 3.4f);
 
@@ -688,6 +763,11 @@ void right_leg()
 		glTranslatef(3.7f, -9.5f, 0.0f);
 		glRotatef(180, 0, 1, 0);
 		rectangle_6();
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(4.0f, -3.0f, 0.0f);
+		rectangle_7(2.5);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -848,7 +928,6 @@ void display()
 
 	//head
 	glPushMatrix();
-		//glRotatef(90, 0.0f, 1.0f, 0.0f);
 		glPushMatrix();
 			head_sphere();
 		glPopMatrix();
@@ -867,11 +946,14 @@ void display()
 	glPopMatrix();
 
 	glPushMatrix();
+	glTranslatef(0.0f, legmove, 0.0f);
+		glPushMatrix();
 		center_leg_connector();
-	glPopMatrix();
+		glPopMatrix();
 
-	glPushMatrix();
+		glPushMatrix();
 		center_leg();
+		glPopMatrix();
 	glPopMatrix();
 
 	//kaki
@@ -984,17 +1066,23 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 		if (activategun == false)
 		{
-			if (gunmove > (-5.0f))
+			if (rotategun == false)
 			{
-				gunmove -= 0.1;
+				if (gunmove > (-5.0f))
+				{
+					gunmove -= 0.1;
+				}
 			}
 		}
 
 		if (rotategun == true)
 		{
-			if (gunrotate < 360.0f)
+			if (activategun == true)
 			{
-				gunrotate += 1.0f;
+				if (gunrotate < 360.0f)
+				{
+					gunrotate += 1.0f;
+				}
 			}
 		}
 

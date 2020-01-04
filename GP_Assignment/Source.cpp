@@ -7,13 +7,14 @@
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
 
-#define WINDOW_TITLE "GP Assignment"
+#define WINDOW_TITLE "GP Assignment R2-D69 By Eik Meng & Kar Weng"
 
 GLfloat gunmove = -5.0f;
 GLfloat gunrotate = 270.0f;
 GLfloat legmove = 2.5f;
 GLfloat bodyrotate = 0;
 GLfloat thrustermove = 0.0;
+GLfloat backthrustermove = 0.0;
 GLfloat rotatehead = 0;
 
 GLfloat movex = 0.0;
@@ -30,6 +31,7 @@ boolean rotategun = false;
 int activateleg = 0;
 int activatebodyrotate = 0;
 int activatethruster = 0;
+int activatebackthruster = 0;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -84,14 +86,6 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			{
 				rotategun = true;
 			}
-		}
-		else if (wParam == 'Z')
-		{
-			activateleg = 1;
-		}
-		else if (wParam == 'X')
-		{
-			activateleg = 2;
 		}
 		else if (wParam == 'C')
 		{
@@ -213,7 +207,7 @@ void join_cylinderright()
 }
 
 //top rectangle for leg (6 polygon)
-void rectangle_1(double h)
+void rectangle_1(float h)
 {
 	glBegin(GL_QUADS);
 		//top
@@ -307,7 +301,7 @@ void rectangle_2()
 }
 
 //rectangle under rectangle_2 (6 polygon)
-void rectangle_3(double h)
+void rectangle_3(float h)
 {
 	glBegin(GL_QUADS);
 		//top
@@ -354,7 +348,7 @@ void rectangle_3(double h)
 }
 
 //rectangle under rectangle_3 (6 polygon)
-void rectangle_4(double h)
+void rectangle_4(float h)
 {
 	glBegin(GL_QUADS);
 		//top
@@ -401,7 +395,7 @@ void rectangle_4(double h)
 }
 
 //rectangle under rectangle_4 (6 polygon)
-void rectangle_5(double h)
+void rectangle_5(float h)
 {
 	glBegin(GL_QUADS);
 		//top
@@ -495,7 +489,7 @@ void rectangle_6()
 }
 
 //(6 polygon)
-void rectangle_7(double h)
+void rectangle_7(float h)
 {
 	glBegin(GL_QUADS);
 	//top
@@ -740,10 +734,11 @@ void thrustercone()
 	glColor3f(0.4, 0.4, 0.4);
 	//gluQuadricTexture(cylinder, TRUE);
 	gluQuadricDrawStyle(thrustercone, GLU_FILL);
-	gluCylinder(thrustercone, 0.2, 0.1, 0.5, 20, 5);
+	gluCylinder(thrustercone, 0.2, 0.15, 0.3, 20, 5);
 	gluDeleteQuadric(thrustercone);
 }
 
+//6 polygon
 void thrusterjoint1()
 {
 	glBegin(GL_QUADS);
@@ -790,6 +785,7 @@ void thrusterjoint1()
 	glEnd();
 }
 
+//left thruster joint (6 polygon)
 void thrusterjoint2()
 {
 	glBegin(GL_QUADS);
@@ -836,6 +832,7 @@ void thrusterjoint2()
 	glEnd();
 }
 
+//right thruster joint (6 polygon)
 void thrusterjoint3()
 {
 	glBegin(GL_QUADS);
@@ -883,12 +880,184 @@ void thrusterjoint3()
 }
 //------------------------------
 
+//----------------------------back thruster
+void backpackthruster(float h)
+{
+	glColor3f(0.0f, 1.0f, 0.5f);
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-1.5f, 1.0f, -1.0f);
+	glVertex3f(-1.5f, 1.0f, 1.0f);
+	glVertex3f(1.5f, 1.0f, 1.0f);
+	glVertex3f(1.5f, 1.0f, -1.0f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(1.5f, 1.0f, -1.0f);
+	glVertex3f(-1.5f, 1.0f, -1.0f);
+	glVertex3f(-1.5f, 0.0f - h, -1.0f);
+	glVertex3f(1.5f, 0.0f - h, -1.0f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(1.5f, 0.0f - h, -1.0f);
+	glVertex3f(1.5f, 1.0f, -1.0f);
+	glVertex3f(1.5f, 1.0f, 1.0f);
+	glVertex3f(1.5f, 0.0f - h, 1.0f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(1.5f, 0.0f - h, 1.0f);
+	glVertex3f(1.5f, 0.0f - h, -1.0f);
+	glVertex3f(-1.5f, 0.0f - h, -1.0f);
+	glVertex3f(-1.5f, 0.0f - h, 1.0f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-1.5f, 0.0f - h, 1.0f);
+	glVertex3f(-1.5f, 0.0f - h, -1.0f);
+	glVertex3f(-1.5f, 1.0f, -1.0f);
+	glVertex3f(-1.5f, 1.0f, 1.0f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-1.5f, 1.0f, 1.0f);
+	glVertex3f(1.5f, 1.0f, 1.0f);
+	glVertex3f(1.5f, 0.0f - h, 1.0f);
+	glVertex3f(-1.5f, 0.0f - h, 1.0f);
+	glEnd();
+}
+
+void backpackthrustercone()
+{
+	GLUquadricObj* backthrustercone = NULL;
+	backthrustercone = gluNewQuadric();
+	glColor3f(0.4, 0.4, 0.4);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(backthrustercone, GLU_FILL);
+	gluCylinder(backthrustercone, 0.5, 0.4, 0.3, 20, 5);
+	gluDeleteQuadric(backthrustercone);
+}
+//----------------------------
+
+
+//-----------------------------Gatling gun
+//1 polygon
+void gg_mainbarrel() {
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 1.5f);
+
+	GLUquadricObj* mainbarrelcylinder = NULL;
+	mainbarrelcylinder = gluNewQuadric();
+	glColor3f(1, 0, 1);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(mainbarrelcylinder, GLU_FILL);
+	gluCylinder(mainbarrelcylinder, 0.2, 0.2, 5, 20, 5);
+	gluDeleteQuadric(mainbarrelcylinder);
+	glPopMatrix();
+}
+
+//6 polygon
+void gg_sidebarrels() {
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 2.0f);
+	for (int i = 0; i <= 6; i++) {
+		glRotatef(60, 0.0f, 0.0f, 1.0f);
+		glPushMatrix();
+		glTranslatef(0.0f, 0.5f, 0.0f);
+		GLUquadricObj* sidebarrelcylinder = NULL;
+		sidebarrelcylinder = gluNewQuadric();
+		glColor3f(1, 0.5, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(sidebarrelcylinder, GLU_FILL);
+		gluCylinder(sidebarrelcylinder, 0.2, 0.2, 5, 20, 5);
+		gluDeleteQuadric(sidebarrelcylinder);
+		glPopMatrix();
+	}
+	glPopMatrix();
+}
+
+//1 polygon
+void gg_barrelholder() {
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 6.0f);
+
+	GLUquadricObj* barrelholdercylinder = NULL;
+	barrelholdercylinder = gluNewQuadric();
+	glColor3f(1, 0, 1);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(barrelholdercylinder, GLU_FILL);
+	gluCylinder(barrelholdercylinder, 0.75, 0.75, 0.5, 20, 5);
+	gluDeleteQuadric(barrelholdercylinder);
+	glPopMatrix();
+}
+
+void gg_barrels() {
+	glPushMatrix();
+		gg_mainbarrel();
+		gg_sidebarrels();
+		gg_barrelholder();
+	glPopMatrix();
+}
+
+//1 polygon
+void gg_body() {
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 1.0f);
+
+	GLUquadricObj* gunbodycylinder = NULL;
+	gunbodycylinder = gluNewQuadric();
+	glColor3f(1, 0, 1);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(gunbodycylinder, GLU_FILL);
+	gluCylinder(gunbodycylinder, 0.75, 0.75, 2, 20, 5);
+	gluDeleteQuadric(gunbodycylinder);
+	glPopMatrix();
+}
+
+//1 polygon
+void gg_connnector() {
+	glPushMatrix();
+
+	GLUquadricObj* gunconnectorcylinder = NULL;
+	gunconnectorcylinder = gluNewQuadric();
+	glColor3f(1, 0, 1);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(gunconnectorcylinder, GLU_FILL);
+	gluCylinder(gunconnectorcylinder, 0.5, 0.5, 2, 20, 5);
+	gluDeleteQuadric(gunconnectorcylinder);
+	glPopMatrix();
+}
+
+//1 polygon
+void gg_head()
+{
+	GLUquadricObj* gunheadsphere = NULL;
+	gunheadsphere = gluNewQuadric();
+	glColor3f(0, 0, 1);
+	gluQuadricDrawStyle(gunheadsphere, GLU_FILL);
+	gluSphere(gunheadsphere, 0.9, 20, 10);
+	gluDeleteQuadric(gunheadsphere);
+}
+
+void gatlingGun() {
+	glPushMatrix();
+		glTranslatef(0.0f, gunmove, 0.0f);
+		glRotatef(gunrotate, 1.0, 0.0, 0.0);
+		gg_barrels();
+		gg_body();
+		gg_connnector();
+		gg_head();
+	glPopMatrix();
+}
+//-----------------------------
+
 
 //-----------------------------Shapes for body
 void head_combined()
 {
 	glPushMatrix();
-	glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
+		glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 		glPushMatrix();
 			head_sphere();
 			head_eyesphere();
@@ -909,7 +1078,7 @@ void body_cylinder()
 		glColor3f(0, 0, 1);
 		//gluQuadricTexture(cylinder, TRUE);
 		gluQuadricDrawStyle(bodycylinder, GLU_FILL);
-		gluCylinder(bodycylinder, 3.0, 3.0, 6.0, 20, 5);
+		gluCylinder(bodycylinder, 3.0, 3.0, 6.0, 40, 5);
 		gluDeleteQuadric(bodycylinder);
 	glPopMatrix();
 }
@@ -944,6 +1113,27 @@ void body_bottom()
 			glVertex2f(bodybottomx1 + (bottomradius * cos(i * twopi / triangleAmount)), bodybottomy1 + (bottomradius * sin(i * twopi / triangleAmount)));
 		}
 		glEnd();
+	glPopMatrix();
+}
+
+void backthruster_combined() 
+{
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, -(backthrustermove));
+		glPushMatrix();
+		glTranslatef(0.0f, -1.5f, -0.0f);
+			backpackthruster(2.0);
+		glPopMatrix();
+		glPushMatrix();
+			glRotatef(90, 1.0f, 0.0f, 0.0f);
+			glTranslatef(0.8f, -0.3f, 3.5f);
+			backpackthrustercone();
+		glPopMatrix();
+		glPushMatrix();
+			glRotatef(90, 1.0f, 0.0f, 0.0f);
+			glTranslatef(-0.8f, -0.3f, 3.5f);
+			backpackthrustercone();
+		glPopMatrix();
 	glPopMatrix();
 }
 
@@ -987,7 +1177,7 @@ void left_leg()
 		GLfloat leftx1 = 0.0;
 		GLfloat lefty1 = 0.0;
 		GLfloat radius1 = 1.0;
-		
+
 		glRotatef(90, 0.0f, 1.0f, 0.0f);
 		glTranslatef(0.0f, -1.0f, 3.2f);
 		glBegin(GL_TRIANGLE_FAN);
@@ -1072,7 +1262,7 @@ void left_leg()
 		glPushMatrix();
 			glTranslatef(-3.6f, -3.1f, 0.0f);
 			thrusterjoint1();
-		glPopMatrix();
+			glPopMatrix();
 		glPushMatrix();
 			glTranslatef(-3.6f, -3.7f, 0.0f);
 			thrusterjoint2();
@@ -1351,117 +1541,6 @@ void center_leg()
 //-----------------------------
 
 
-//-----------------------------Gatling gun
-//1 polygon
-void gg_mainbarrel() {
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 1.5f);
-
-	GLUquadricObj* mainbarrelcylinder = NULL;
-	mainbarrelcylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(mainbarrelcylinder, GLU_FILL);
-	gluCylinder(mainbarrelcylinder, 0.2, 0.2, 5, 20, 5);
-	gluDeleteQuadric(mainbarrelcylinder);
-	glPopMatrix();
-}
-
-//6 polygon
-void gg_sidebarrels() {
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 2.0f);
-	for (int i = 0; i <= 6; i++) {
-		glRotatef(60, 0.0f, 0.0f, 1.0f);
-		glPushMatrix();
-		glTranslatef(0.0f, 0.5f, 0.0f);
-		GLUquadricObj* sidebarrelcylinder = NULL;
-		sidebarrelcylinder = gluNewQuadric();
-		glColor3f(1, 0.5, 1);
-		//gluQuadricTexture(cylinder, TRUE);
-		gluQuadricDrawStyle(sidebarrelcylinder, GLU_FILL);
-		gluCylinder(sidebarrelcylinder, 0.2, 0.2, 5, 20, 5);
-		gluDeleteQuadric(sidebarrelcylinder);
-		glPopMatrix();
-	}
-	glPopMatrix();
-}
-
-//1 polygon
-void gg_barrelholder() {
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 6.0f);
-
-	GLUquadricObj* barrelholdercylinder = NULL;
-	barrelholdercylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(barrelholdercylinder, GLU_FILL);
-	gluCylinder(barrelholdercylinder, 0.75, 0.75, 0.5, 20, 5);
-	gluDeleteQuadric(barrelholdercylinder);
-	glPopMatrix();
-}
-
-void gg_barrels() {
-	glPushMatrix();
-		gg_mainbarrel();
-		gg_sidebarrels();
-		gg_barrelholder();
-	glPopMatrix();
-}
-
-//1 polygon
-void gg_body() {
-	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 1.0f);
-
-	GLUquadricObj* gunbodycylinder = NULL;
-	gunbodycylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(gunbodycylinder, GLU_FILL);
-	gluCylinder(gunbodycylinder, 0.75, 0.75, 2, 20, 5);
-	gluDeleteQuadric(gunbodycylinder);
-	glPopMatrix();
-}
-
-//1 polygon
-void gg_connnector() {
-	glPushMatrix();
-
-	GLUquadricObj* gunconnectorcylinder = NULL;
-	gunconnectorcylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(gunconnectorcylinder, GLU_FILL);
-	gluCylinder(gunconnectorcylinder, 0.5, 0.5, 2, 20, 5);
-	gluDeleteQuadric(gunconnectorcylinder);
-	glPopMatrix();
-}
-
-//1 polygon
-void gg_head()
-{
-	GLUquadricObj* gunheadsphere = NULL;
-	gunheadsphere = gluNewQuadric();
-	glColor3f(0, 0, 1);
-	gluQuadricDrawStyle(gunheadsphere, GLU_FILL);
-	gluSphere(gunheadsphere, 0.9, 20, 10);
-	gluDeleteQuadric(gunheadsphere);
-}
-
-void gatlingGun() {
-	glPushMatrix();
-		glTranslatef(0.0f, gunmove, 0.0f);
-		glRotatef(gunrotate, 1.0, 0.0, 0.0);
-		gg_barrels();
-		gg_body();
-		gg_connnector();
-		gg_head();
-	glPopMatrix();
-}
-//-----------------------------
-
 void display()
 {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -1487,6 +1566,8 @@ void display()
 				gatlingGun();
 				body_cylinder();
 				body_bottom();
+
+				backthruster_combined();
 			
 				glPushMatrix();
 
@@ -1597,8 +1678,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	/*gluPerspective(40.0, 1.0, 1, 5000);
-	glFrustum(-2, 2, -2, 2, 1, 5000);*/
+	//glScalef(0.7, 0.7, 0.7);
+	//gluPerspective(30.0, 1.0, 1, 5000);
+	//glFrustum(-30, 30, -30, 30, 20, 5000);
 	glOrtho(-12, 12, -12, 12, -20, 20);
 
 	while (true)
@@ -1695,9 +1777,20 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		//thruster movement---------------------
 		if (activatethruster == 1) {
 			thrustermove += 0.1;
+			activatebackthruster = 1;
 		}
 		else if (activatethruster == 2) {
 			thrustermove -= 0.1;
+			activatebackthruster = 2;
+		}
+
+		if (activatebackthruster == 1)
+		{
+			backthrustermove += 0.1;
+		}
+		else if (activatebackthruster == 2)
+		{
+			backthrustermove -= 0.1;
 		}
 
 		if (thrustermove >= 1.1)
@@ -1709,6 +1802,17 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		{
 			thrustermove = 0;
 			activatethruster = 0;
+		}
+		
+		if (backthrustermove >= 3.5)
+		{
+			backthrustermove = 3.5;
+			activatebackthruster = 0;
+		}
+		else if (backthrustermove <= 0.1)
+		{
+			backthrustermove = 0.0;
+			activatebackthruster = 0;
 		}
 		//--------------------------------------
 

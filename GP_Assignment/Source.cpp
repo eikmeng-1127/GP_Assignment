@@ -18,6 +18,9 @@ GLfloat movey = 0.0;
 GLfloat movez = 0.0;
 GLfloat rotater2 = 0;
 
+int triangleAmount = 400;
+GLfloat twopi = 2.0f * 3.14159265359;
+
 boolean activategun = false;
 boolean rotategun = false;
 int activateleg = 0;
@@ -163,13 +166,13 @@ void join_cylinderleft()
 	glRotatef(270, 0, 1.0, 0);
 	glTranslatef(0.0f, -1.0f, 2.3f);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
-	glColor3f(0, 1, 0);
+	GLUquadricObj* cylinderleft = NULL;
+	cylinderleft = gluNewQuadric();
+	glColor3f(0.4, 0.4, 0.4);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.5, 0.5, 1.5, 20, 5);
-	gluDeleteQuadric(cylinder);
+	gluQuadricDrawStyle(cylinderleft, GLU_FILL);
+	gluCylinder(cylinderleft, 0.5, 0.5, 1.5, 20, 5);
+	gluDeleteQuadric(cylinderleft);
 }
 
 void join_cylinderright()
@@ -177,19 +180,18 @@ void join_cylinderright()
 	glRotatef(90, 0, 1.0, 0);
 	glTranslatef(0.0f, -1.0f, 2.3f);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
-	glColor3f(0, 1, 0);
+	GLUquadricObj* cylinderright = NULL;
+	cylinderright = gluNewQuadric();
+	glColor3f(0.4, 0.4, 0.4);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.5, 0.5, 1.5, 20, 5);
-	gluDeleteQuadric(cylinder);
+	gluQuadricDrawStyle(cylinderright, GLU_FILL);
+	gluCylinder(cylinderright, 0.5, 0.5, 1.5, 20, 5);
+	gluDeleteQuadric(cylinderright);
 }
 
 //top rectangle for leg
 void rectangle_1(double h)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.5f, 1.0f, -1.0f);
@@ -237,7 +239,6 @@ void rectangle_1(double h)
 //shape under rectangle_1
 void rectangle_2()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.5f, 1.0f, -1.0f);
@@ -285,7 +286,6 @@ void rectangle_2()
 //rectangle under rectangle_2
 void rectangle_3(double h)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.5f, 1.0f, -0.5f);
@@ -333,7 +333,6 @@ void rectangle_3(double h)
 //rectangle under rectangle_3
 void rectangle_4(double h)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.6f, 1.0f, -0.6f);
@@ -381,7 +380,6 @@ void rectangle_4(double h)
 //rectangle under rectangle_4
 void rectangle_5(double h)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.6f, 1.0f, -0.6f);
@@ -429,7 +427,6 @@ void rectangle_5(double h)
 //rectangle under rectangle_5
 void rectangle_6()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-1.0f, 1.0f, -1.5f);
@@ -476,7 +473,6 @@ void rectangle_6()
 
 void rectangle_7(double h)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 	//top
 	glVertex3f(-0.5f, 1.0f, -0.4f);
@@ -523,7 +519,7 @@ void rectangle_7(double h)
 
 void quadforcenterleg()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.8f, 1.0f, -0.8f);
@@ -570,7 +566,6 @@ void quadforcenterleg()
 
 void quadforcenterleg_2()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-1.0f, 1.0f, -1.2f);
@@ -630,57 +625,81 @@ void thrustercylinder()
 //-----------------------------Shapes for body
 void head_sphere()
 {
-	glTranslatef(0.0f, 0.25f, 0.0f);
-	glRotatef(90, 1.0, 0.0, 0.0);
+	glPushMatrix();
+		glTranslatef(0.0f, 0.25f, 0.0f);
+		glRotatef(90, 1.0, 0.0, 0.0);
 
-	GLUquadricObj* sphere = NULL;
-	sphere = gluNewQuadric();
-	glColor3f(0, 0, 1);
-	gluQuadricDrawStyle(sphere, GLU_LINE);
-	gluSphere(sphere, 2.95, 20, 10);
-	gluDeleteQuadric(sphere);
+		GLUquadricObj* headsphere = NULL;
+		headsphere = gluNewQuadric();
+		glColor3f(1, 0, 0);
+		gluQuadricDrawStyle(headsphere, GLU_FILL);
+		gluSphere(headsphere, 2.95, 20, 10);
+		gluDeleteQuadric(headsphere);
+	glPopMatrix();
 }
 
 void body_cylinder()
 {
-	glTranslatef(0.0f, 0.25f, 0.0f);
-	glRotatef(90, 1.0, 0.0, 0.0);
+	glPushMatrix();
+		glTranslatef(0.0f, 0.25f, 0.0f);
+		glRotatef(90, 1.0, 0.0, 0.0);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
-	glColor3f(1, 0, 0);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 3.0, 3.0, 6.0, 20, 5);
-	gluDeleteQuadric(cylinder);
+		GLUquadricObj* bodycylinder = NULL;
+		bodycylinder = gluNewQuadric();
+		glColor3f(0, 0, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(bodycylinder, GLU_FILL);
+		gluCylinder(bodycylinder, 3.0, 3.0, 6.0, 20, 5);
+		gluDeleteQuadric(bodycylinder);
+	glPopMatrix();
 }
 
 void body_bottom()
 {
-	glRotatef(90, 1, 0, 0);
-	glTranslatef(0.0f, 0.0f, 5.7f);
+	glPushMatrix();
+		glRotatef(90, 1, 0, 0);
+		glTranslatef(0.0f, 0.0f, 5.7f);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
-	glColor3f(1, 0, 0);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 3.0, 2.5, 1.0, 20, 5);
-	gluDeleteQuadric(cylinder);
+		GLUquadricObj* bodybottomcylinder = NULL;
+		bodybottomcylinder = gluNewQuadric();
+		glColor3f(0, 0, 1);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(bodybottomcylinder, GLU_FILL);
+		gluCylinder(bodybottomcylinder, 3.0, 2.5, 1.0, 20, 5);
+		gluDeleteQuadric(bodybottomcylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat bodybottomx1 = 0.0;
+		GLfloat bodybottomy1 = 0.0;
+		GLfloat bottomradius = 2.5;
+
+		glRotatef(90, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 6.7f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 1.0);
+		glVertex2f(bodybottomx1, bodybottomy1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(bodybottomx1 + (bottomradius * cos(i * twopi / triangleAmount)), bodybottomy1 + (bottomradius * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
 }
 
 void center_leg_connector()
 {
-	glTranslatef(0.0f, -5.7f, 0.0f);
-	glRotatef(90, 1.0, 0.0, 0.0);
+	glPushMatrix();
+		glTranslatef(0.0f, -5.7f, 0.0f);
+		glRotatef(90, 1.0, 0.0, 0.0);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.5, 0.5, 1.5, 20, 5);
-	gluDeleteQuadric(cylinder);
+		GLUquadricObj* centerlegcylinder = NULL;
+		centerlegcylinder = gluNewQuadric();
+		glColor3f(0.4, 0.4, 0.4);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(centerlegcylinder, GLU_FILL);
+		gluCylinder(centerlegcylinder, 0.5, 0.5, 1.5, 20, 5);
+		gluDeleteQuadric(centerlegcylinder);
+	glPopMatrix();
 }
 
 //-------------------------------
@@ -695,46 +714,85 @@ void left_leg()
 		glRotatef(270, 0, 1.0, 0);
 		glTranslatef(0.0f, -1.0f, 3.2f);
 
-		GLUquadricObj* cylinder = NULL;
-		cylinder = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		gluQuadricDrawStyle(cylinder, GLU_LINE);
-		gluCylinder(cylinder, 1, 1, 1, 20, 5);
-		gluDeleteQuadric(cylinder);
+		GLUquadricObj* leftlegcylinder = NULL;
+		leftlegcylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricDrawStyle(leftlegcylinder, GLU_FILL);
+		gluCylinder(leftlegcylinder, 1, 1, 1, 20, 5);
+		gluDeleteQuadric(leftlegcylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat leftx1 = 0.0;
+		GLfloat lefty1 = 0.0;
+		GLfloat radius1 = 1.0;
+		
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -1.0f, 3.2f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex2f(leftx1, lefty1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(leftx1 + (radius1 * cos(i * twopi / triangleAmount)), lefty1 + (radius1 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat leftx2 = 0.0;
+		GLfloat lefty2 = 0.0;
+		GLfloat radius2 = 1.0;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -1.0f, 4.2f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex2f(leftx2, lefty2);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(leftx2 + (radius2 * cos(i * twopi / triangleAmount)), lefty2 + (radius2 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -2.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_1(1.0);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -4.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_2();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -4.5f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_3(1.5);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -7.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_4(0);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -8.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_5(0.5);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-3.7f, -9.5f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_6();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(-4.0f, -3.0f, 0.0f);
+		glColor3f(0, 0.5, 1);
 		rectangle_7(2.5);
 	glPopMatrix();
 
@@ -742,12 +800,44 @@ void left_leg()
 		glRotatef(270, 0, 1.0, 0);
 		glTranslatef(0.0f, -8.3f, 3.4f);
 
-		GLUquadricObj* cylinder2 = NULL;
-		cylinder2 = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		gluQuadricDrawStyle(cylinder2, GLU_LINE);
-		gluCylinder(cylinder2, 0.9, 0.9, 0.9, 20, 5);
-		gluDeleteQuadric(cylinder2);
+		GLUquadricObj* lefttyrecylinder = NULL;
+		lefttyrecylinder = gluNewQuadric();
+		glColor3f(0.3, 0.3, 0.3);
+		gluQuadricDrawStyle(lefttyrecylinder, GLU_FILL);
+		gluCylinder(lefttyrecylinder, 0.9, 0.9, 0.9, 20, 5);
+		gluDeleteQuadric(lefttyrecylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat lefttyrex1 = 0.0;
+		GLfloat lefttyrey1 = 0.0;
+		GLfloat radiustyre1 = 0.9;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, 3.4f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(lefttyrex1, lefttyrey1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(lefttyrex1 + (radiustyre1 * cos(i * twopi / triangleAmount)), lefttyrey1 + (radiustyre1 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat lefttyrex2 = 0.0;
+		GLfloat lefttyrey2 = 0.0;
+		GLfloat radiustyre2 = 0.9;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, 4.3f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(lefttyrex2, lefttyrey2);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(lefttyrex2 + (radiustyre2 * cos(i * twopi / triangleAmount)), lefttyrey2 + (radiustyre2 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
 	glPopMatrix();
 }
 
@@ -758,49 +848,88 @@ void right_leg()
 		glRotatef(90, 0, 1.0, 0);
 		glTranslatef(0.0f, -1.0f, 3.2f);
 
-		GLUquadricObj* cylinder = NULL;
-		cylinder = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		gluQuadricDrawStyle(cylinder, GLU_LINE);
-		gluCylinder(cylinder, 1, 1, 1, 20, 5);
-		gluDeleteQuadric(cylinder);
+		GLUquadricObj* rightlegcylinder = NULL;
+		rightlegcylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricDrawStyle(rightlegcylinder, GLU_FILL);
+		gluCylinder(rightlegcylinder, 1, 1, 1, 20, 5);
+		gluDeleteQuadric(rightlegcylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat rightx1 = 0.0;
+		GLfloat righty1 = 0.0;
+		GLfloat radius3 = 1.0;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -1.0f, -3.2f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex2f(rightx1, righty1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(rightx1 + (radius3 * cos(i * twopi / triangleAmount)), righty1 + (radius3 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat rightx2 = 0.0;
+		GLfloat righty2 = 0.0;
+		GLfloat radius4 = 1.0;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -1.0f, -4.2f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(1.0, 1.0, 1.0);
+		glVertex2f(rightx2, righty2);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(rightx2 + (radius4 * cos(i * twopi / triangleAmount)), righty2 + (radius4 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(3.7f, -2.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_1(1.0);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(3.7f, -4.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_2();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(3.7f, -4.5f, 0.0f);
+		glColor3f(1, 1, 1);
 		rectangle_3(1.5);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(3.7f, -7.0f, 0.0f);
 		glRotatef(180, 0, 1, 0);
+		glColor3f(1, 1, 1);
 		rectangle_4(0);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(3.7f, -8.0f, 0.0f);
 		glRotatef(180, 0, 1, 0);
+		glColor3f(1, 1, 1);
 		rectangle_5(0.5);
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(3.7f, -9.5f, 0.0f);
 		glRotatef(180, 0, 1, 0);
+		glColor3f(1, 1, 1);
 		rectangle_6();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(4.0f, -3.0f, 0.0f);
+		glColor3f(0, 0.5, 1);
 		rectangle_7(2.5);
 	glPopMatrix();
 
@@ -808,12 +937,44 @@ void right_leg()
 		glRotatef(90, 0, 1.0, 0);
 		glTranslatef(0.0f, -8.3f, 3.4f);
 
-		GLUquadricObj* cylinder2 = NULL;
-		cylinder2 = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		gluQuadricDrawStyle(cylinder2, GLU_LINE);
-		gluCylinder(cylinder2, 0.9, 0.9, 0.9, 20, 5);
-		gluDeleteQuadric(cylinder2);
+		GLUquadricObj* righttyrecylinder = NULL;
+		righttyrecylinder = gluNewQuadric();
+		glColor3f(0.3, 0.3, 0.3);
+		gluQuadricDrawStyle(righttyrecylinder, GLU_FILL);
+		gluCylinder(righttyrecylinder, 0.9, 0.9, 0.9, 20, 5);
+		gluDeleteQuadric(righttyrecylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat lefttyrex3 = 0.0;
+		GLfloat lefttyrey3 = 0.0;
+		GLfloat radiustyre3 = 0.9;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, -3.4f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(lefttyrex3, lefttyrey3);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(lefttyrex3 + (radiustyre3 * cos(i * twopi / triangleAmount)), lefttyrey3 + (radiustyre3 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat lefttyrex4 = 0.0;
+		GLfloat lefttyrey4 = 0.0;
+		GLfloat radiustyre4 = 0.9;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, -4.3f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(lefttyrex4, lefttyrey4);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(lefttyrex4 + (radiustyre4 * cos(i * twopi / triangleAmount)), lefttyrey4 + (radiustyre4 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
 	glPopMatrix();
 }
 
@@ -821,11 +982,13 @@ void center_leg()
 {
 	glPushMatrix();
 		glTranslatef(0.0f, -8.0f, 0.0f);
+		glColor3f(1, 1, 1);
 		quadforcenterleg();
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(0.0f, -9.5f, 0.0f);
+		glColor3f(1, 1, 1);
 		quadforcenterleg_2();
 	glPopMatrix();
 
@@ -833,13 +996,46 @@ void center_leg()
 		glRotatef(90.0, 0.0f, 1.0f, 0.0f);
 		glTranslatef(0.0f, -8.3f, -0.45);
 
-		GLUquadricObj* cylinder2 = NULL;
-		cylinder2 = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		gluQuadricDrawStyle(cylinder2, GLU_LINE);
-		gluCylinder(cylinder2, 0.9, 0.9, 0.9, 20, 5);
-		gluDeleteQuadric(cylinder2);
+		GLUquadricObj* centertyrecylinder = NULL;
+		centertyrecylinder = gluNewQuadric();
+		glColor3f(0.3, 0.3, 0.3);
+		gluQuadricDrawStyle(centertyrecylinder, GLU_FILL);
+		gluCylinder(centertyrecylinder, 0.9, 0.9, 0.9, 20, 5);
+		gluDeleteQuadric(centertyrecylinder);
 	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat centertyrex1 = 0.0;
+		GLfloat centertyrey1 = 0.0;
+		GLfloat radiustyre5 = 0.9;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, 0.5f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(centertyrex1, centertyrey1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(centertyrex1 + (radiustyre5 * cos(i * twopi / triangleAmount)), centertyrey1 + (radiustyre5 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat centertyrex2 = 0.0;
+		GLfloat centertyrey2 = 0.0;
+		GLfloat radiustyre6 = 0.9;
+
+		glRotatef(90, 0.0f, 1.0f, 0.0f);
+		glTranslatef(0.0f, -8.3f, -0.5f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(centertyrex2, centertyrey2);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(centertyrex2 + (radiustyre6 * cos(i * twopi / triangleAmount)), centertyrey2 + (radiustyre6 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
 }
 //-----------------------------
 
@@ -850,13 +1046,13 @@ void gg_mainbarrel() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 1.5f);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
+	GLUquadricObj* mainbarrelcylinder = NULL;
+	mainbarrelcylinder = gluNewQuadric();
 	glColor3f(1, 0, 1);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.2, 0.2, 5, 20, 5);
-	gluDeleteQuadric(cylinder);
+	gluQuadricDrawStyle(mainbarrelcylinder, GLU_FILL);
+	gluCylinder(mainbarrelcylinder, 0.2, 0.2, 5, 20, 5);
+	gluDeleteQuadric(mainbarrelcylinder);
 	glPopMatrix();
 }
 
@@ -867,13 +1063,13 @@ void gg_sidebarrels() {
 		glRotatef(60, 0.0f, 0.0f, 1.0f);
 		glPushMatrix();
 		glTranslatef(0.0f, 0.5f, 0.0f);
-		GLUquadricObj* cylinder = NULL;
-		cylinder = gluNewQuadric();
-		glColor3f(1, 0, 1);
+		GLUquadricObj* sidebarrelcylinder = NULL;
+		sidebarrelcylinder = gluNewQuadric();
+		glColor3f(1, 0.5, 1);
 		//gluQuadricTexture(cylinder, TRUE);
-		gluQuadricDrawStyle(cylinder, GLU_LINE);
-		gluCylinder(cylinder, 0.2, 0.2, 5, 20, 5);
-		gluDeleteQuadric(cylinder);
+		gluQuadricDrawStyle(sidebarrelcylinder, GLU_FILL);
+		gluCylinder(sidebarrelcylinder, 0.2, 0.2, 5, 20, 5);
+		gluDeleteQuadric(sidebarrelcylinder);
 		glPopMatrix();
 	}
 	glPopMatrix();
@@ -883,13 +1079,13 @@ void gg_barrelholder() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 6.0f);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
+	GLUquadricObj* barrelholdercylinder = NULL;
+	barrelholdercylinder = gluNewQuadric();
 	glColor3f(1, 0, 1);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.75, 0.75, 0.5, 20, 5);
-	gluDeleteQuadric(cylinder);
+	gluQuadricDrawStyle(barrelholdercylinder, GLU_FILL);
+	gluCylinder(barrelholdercylinder, 0.75, 0.75, 0.5, 20, 5);
+	gluDeleteQuadric(barrelholdercylinder);
 	glPopMatrix();
 }
 
@@ -905,38 +1101,38 @@ void gg_body() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 1.0f);
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
+	GLUquadricObj* gunbodycylinder = NULL;
+	gunbodycylinder = gluNewQuadric();
 	glColor3f(1, 0, 1);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.75, 0.75, 2, 20, 5);
-	gluDeleteQuadric(cylinder);
+	gluQuadricDrawStyle(gunbodycylinder, GLU_FILL);
+	gluCylinder(gunbodycylinder, 0.75, 0.75, 2, 20, 5);
+	gluDeleteQuadric(gunbodycylinder);
 	glPopMatrix();
 }
 
 void gg_connnector() {
 	glPushMatrix();
 
-	GLUquadricObj* cylinder = NULL;
-	cylinder = gluNewQuadric();
+	GLUquadricObj* gunconnectorcylinder = NULL;
+	gunconnectorcylinder = gluNewQuadric();
 	glColor3f(1, 0, 1);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinder, GLU_LINE);
-	gluCylinder(cylinder, 0.5, 0.5, 2, 20, 5);
-	gluDeleteQuadric(cylinder);
+	gluQuadricDrawStyle(gunconnectorcylinder, GLU_FILL);
+	gluCylinder(gunconnectorcylinder, 0.5, 0.5, 2, 20, 5);
+	gluDeleteQuadric(gunconnectorcylinder);
 	glPopMatrix();
 }
 
 void gg_head()
 {
 
-	GLUquadricObj* sphere = NULL;
-	sphere = gluNewQuadric();
+	GLUquadricObj* gunheadsphere = NULL;
+	gunheadsphere = gluNewQuadric();
 	glColor3f(0, 0, 1);
-	gluQuadricDrawStyle(sphere, GLU_LINE);
-	gluSphere(sphere, 0.9, 20, 10);
-	gluDeleteQuadric(sphere);
+	gluQuadricDrawStyle(gunheadsphere, GLU_FILL);
+	gluSphere(gunheadsphere, 0.9, 20, 10);
+	gluDeleteQuadric(gunheadsphere);
 }
 
 void gatlingGun() {
@@ -960,36 +1156,28 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 
 	glPushMatrix();
-	glTranslatef(movex, movey, movez);
-	glRotatef(rotater2, 0.0f, 1.0f, 0.0f);
-		//body
 		glPushMatrix();
-			glTranslatef(0.0f, -1.0f, 0.0f);
-			glRotatef(-bodyrotate, 1.0f, 0.0f, 0.0f);
-			glTranslatef(0.0f, 1.0f, 0.0f);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-			//head
-			glPushMatrix();
-				glPushMatrix();
-					head_sphere();
-				glPopMatrix();
-				glPushMatrix();
-					gatlingGun();
-				glPopMatrix();
-			glPopMatrix();
+			glTranslatef(movex, movey, movez);
+			glRotatef(rotater2, 0.0f, 1.0f, 0.0f);
 
 			glPushMatrix();
+
+				glTranslatef(0.0f, -1.0f, 0.0f);
+				glRotatef(-bodyrotate, 1.0f, 0.0f, 0.0f);
+				glTranslatef(0.0f, 1.0f, 0.0f);
+
+				head_sphere();
+				gatlingGun();
 				body_cylinder();
-			glPopMatrix();
-			glPushMatrix();
 				body_bottom();
-			glPopMatrix();
+			
+				glPushMatrix();
 
-			glPushMatrix();
-				glTranslatef(0.0f, legmove, 0.0f);
-					glPushMatrix();
-						center_leg_connector();
-					glPopMatrix();
+					glTranslatef(0.0f, legmove, 0.0f);
+
+					center_leg_connector();
 
 					glPushMatrix();
 						glTranslatef(0.0f, -8.0f, 0.0f);
@@ -997,31 +1185,36 @@ void display()
 						glTranslatef(0.0f, 8.0f, 0.0f);
 						center_leg();
 					glPopMatrix();
+
 				glPopMatrix();
-			glPopMatrix();
 
-		//kaki
-		glPushMatrix();
-			glPushMatrix();
-				join_cylinderleft();
 			glPopMatrix();
 
 			glPushMatrix();
-				left_leg();
+
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+				glPushMatrix();
+					join_cylinderleft();
+				glPopMatrix();
+
+				glPushMatrix();
+					left_leg();
+				glPopMatrix();
+
+				glPushMatrix();
+					join_cylinderright();
+				glPopMatrix();
+
+				glPushMatrix();
+					right_leg();
+				glPopMatrix();
+
 			glPopMatrix();
 
-			glPushMatrix();
-				join_cylinderright();
-			glPopMatrix();
-
-			glPushMatrix();
-				right_leg();
-			glPopMatrix();
 		glPopMatrix();
+
 	glPopMatrix();
-
-	
-
 
 	//Show direction
 	glPushMatrix();
@@ -1091,7 +1284,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	glLoadIdentity();
 	/*gluPerspective(40.0, 1.0, 1, 5000);
 	glFrustum(-2, 2, -2, 2, 1, 5000);*/
-	glOrtho(-12, 12, -12, 12, -12, 12);
+	glOrtho(-12, 12, -12, 12, -20, 20);
 
 	while (true)
 	{

@@ -3,9 +3,11 @@
 #include <gl/GL.h>
 #include <gl/GLU.h>
 #include <math.h>
+#include <mmsystem.h>
 
 #pragma comment (lib, "OpenGL32.lib")
 #pragma comment (lib, "GLU32.lib")
+#pragma comment (lib, "winmm.lib")
 
 #define WINDOW_TITLE "GP Assignment R2-D69 By Eik Meng & Kar Weng"
 
@@ -16,6 +18,8 @@ GLfloat bodyrotate = 0;
 GLfloat thrustermove = 0.0;
 GLfloat backthrustermove = 0.0;
 GLfloat rotatehead = 0;
+GLfloat secondeyemove = 0;
+GLfloat rotateeye = 0;
 
 GLfloat movex = 0.0;
 GLfloat movey = 0.0;
@@ -32,6 +36,7 @@ int activateleg = 0;
 int activatebodyrotate = 0;
 int activatethruster = 0;
 int activatebackthruster = 0;
+int activatesecondeye = 0;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -87,9 +92,18 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 				rotategun = true;
 			}
 		}
+		else if (wParam == 'Z')
+		{
+			activatesecondeye = 1;
+		}
+		else if (wParam == 'X')
+		{
+			activatesecondeye = 2;
+		}
 		else if (wParam == 'C')
 		{
 			activatebodyrotate = 1;
+			PlaySound("Playful_R2D2.wav", NULL, SND_ASYNC);
 		} 
 		else if (wParam == 'V')
 		{
@@ -134,6 +148,14 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == '0')
 		{
 			rotatehead -= 2;
+		}
+		else if (wParam == '7')
+		{
+			rotateeye += 2;
+		}
+		else if (wParam == '8')
+		{
+			rotateeye -= 2;
 		}
 		break;
 
@@ -712,6 +734,74 @@ void head_eyesphere()
 		gluDeleteQuadric(eyesphere);
 	glPopMatrix();
 }
+
+void head_secondeyecylinder()
+{
+	GLUquadricObj* thrustercylinder = NULL;
+	thrustercylinder = gluNewQuadric();
+	glColor3f(0.4, 0.4, 0.4);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(thrustercylinder, GLU_FILL);
+	gluCylinder(thrustercylinder, 0.2, 0.2, 1.5, 20, 5);
+	gluDeleteQuadric(thrustercylinder);
+}
+
+void head_secondeyequad()
+{
+	glBegin(GL_QUADS);
+		//top
+		glColor3f(0, 0, 1);
+		glVertex3f(-1.0f, 0.6f, -0.6f);
+		glVertex3f(-0.5f, 1.5f, 0.6f);
+		glVertex3f(0.5f, 1.5f, 0.6f);
+		glVertex3f(1.0f, 0.6f, -0.6f);
+
+		//back
+		glColor3f(0.9, 0.9, 0.9);
+		glVertex3f(1.0f, 0.6f, -0.6f);
+		glVertex3f(-1.0f, 0.6f, -0.6f);
+		glVertex3f(-1.0f, 0.0f, -0.6f);
+		glVertex3f(1.0f, 0.0f, -0.6f);
+
+		//right
+		glColor3f(0.9, 0.9, 0.9);
+		glVertex3f(1.0f, 0.0f, -0.6f);
+		glVertex3f(1.0f, 0.6f, -0.6f);
+		glVertex3f(0.5f, 1.5f, 0.6f);
+		glVertex3f(0.5f, 0.0f, 0.6f);
+
+		//bottom
+		glColor3f(0, 0, 1);
+		glVertex3f(0.5f, 0.0f, 0.6f);
+		glVertex3f(1.0f, 0.0f, -0.6f);
+		glVertex3f(-1.0f, 0.0f, -0.6f);
+		glVertex3f(-0.5f, 0.0f, 0.6f);
+
+		//left
+		glColor3f(0.9, 0.9, 0.9);
+		glVertex3f(-0.5f, 0.0f, 0.6f);
+		glVertex3f(-1.0f, 0.0f, -0.6f);
+		glVertex3f(-1.0f, 0.6f, -0.6f);
+		glVertex3f(-0.5f, 1.5f, 0.6f);
+
+		//front
+		glColor3f(0.9, 0.9, 0.9);
+		glVertex3f(-0.5f, 1.5f, 0.6f);
+		glVertex3f(0.5f, 1.5f, 0.6f);
+		glVertex3f(0.5f, 0.0f, 0.6f);
+		glVertex3f(-0.5f, 0.0f, 0.6f);
+	glEnd();
+}
+
+void head_secondeyesphere()
+{
+	GLUquadricObj* eyesphere = NULL;
+	eyesphere = gluNewQuadric();
+	glColor3f(0, 0, 0);
+	gluQuadricDrawStyle(eyesphere, GLU_FILL);
+	gluSphere(eyesphere, 0.35, 20, 10);
+	gluDeleteQuadric(eyesphere);
+}
 //----------------------------
 
 
@@ -1062,6 +1152,27 @@ void head_combined()
 			head_sphere();
 			head_eyesphere();
 			head_eyepiece(0.0);
+			glPushMatrix();
+			glTranslatef(0.0f, secondeyemove, 0.0f);
+				glPushMatrix();
+					glRotatef(90, 1.0f, 0.0f, 0.0f);
+					glTranslatef(0.0f, -1.3f, -1.0f);
+					head_secondeyecylinder();
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(0.0f, -1.3f, -1.3f);
+					glRotatef(rotateeye, 0.0f, 1.0f, 0.0f);
+					glTranslatef(0.0f, 1.3f, 1.3f);
+					glPushMatrix();
+						glTranslatef(0.0f, 1.0f, -1.3f);
+						head_secondeyequad();
+					glPopMatrix();
+					glPushMatrix();
+						glTranslatef(0.0f, 1.7f, -0.85f);
+						head_secondeyesphere();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
 }
@@ -1548,7 +1659,6 @@ void display()
 	glEnable(GL_DEPTH_TEST);
 
 	glMatrixMode(GL_MODELVIEW);
-
 	glPushMatrix();
 		glPushMatrix();
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1563,10 +1673,9 @@ void display()
 				glTranslatef(0.0f, 1.0f, 0.0f);
 
 				head_combined();
-				gatlingGun();
+				//gatlingGun();
 				body_cylinder();
 				body_bottom();
-
 				backthruster_combined();
 			
 				glPushMatrix();
@@ -1588,7 +1697,7 @@ void display()
 
 			glPushMatrix();
 
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 				glPushMatrix();
 					join_cylinderleft();
@@ -1679,7 +1788,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glScalef(0.7, 0.7, 0.7);
-	//gluPerspective(30.0, 1.0, 1, 5000);
+	//gluPerspective(20.0, 1.0, 1, 100);
 	//glFrustum(-30, 30, -30, 30, 20, 5000);
 	glOrtho(-12, 12, -12, 12, -20, 20);
 
@@ -1813,6 +1922,28 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		{
 			backthrustermove = 0.0;
 			activatebackthruster = 0;
+		}
+		//--------------------------------------
+
+		//Second eye movement-------------------
+		if (activatesecondeye == 1)
+		{
+			secondeyemove += 0.1;
+		}
+		else if (activatesecondeye == 2)
+		{
+			secondeyemove -= 0.1;
+		}
+
+		if (secondeyemove >= 3.0)
+		{
+			secondeyemove = 3.0;
+			activatesecondeye = 0;
+		}
+		else if (secondeyemove <= 0.1)
+		{
+			secondeyemove -= 0;
+			activatesecondeye = 0;
 		}
 		//--------------------------------------
 

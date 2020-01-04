@@ -671,7 +671,7 @@ void body_bottom()
 
 void center_leg_connector()
 {
-	glTranslatef(0.0f, -6.0f, 0.0f);
+	glTranslatef(0.0f, -5.7f, 0.0f);
 	glRotatef(90, 1.0, 0.0, 0.0);
 
 	GLUquadricObj* cylinder = NULL;
@@ -949,7 +949,6 @@ void gatlingGun() {
 		gg_head();
 	glPopMatrix();
 }
-
 //-----------------------------
 
 void display()

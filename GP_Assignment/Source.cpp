@@ -13,9 +13,13 @@ GLfloat gunmove = -5.0f;
 GLfloat gunrotate = 270.0f;
 GLfloat legmove = 2.5f;
 GLfloat bodyrotate = 0;
+GLfloat thrustermove = 0.0;
+GLfloat rotatehead = 0;
+
 GLfloat movex = 0.0;
 GLfloat movey = 0.0;
 GLfloat movez = 0.0;
+
 GLfloat rotater2 = 0;
 
 int triangleAmount = 400;
@@ -25,6 +29,7 @@ boolean activategun = false;
 boolean rotategun = false;
 int activateleg = 0;
 int activatebodyrotate = 0;
+int activatethruster = 0;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -119,6 +124,22 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'E')
 		{
 			rotater2 -= 2;
+		}
+		else if (wParam == 'O')
+		{
+			activatethruster = 1;
+		}
+		else if (wParam == 'P')
+		{
+			activatethruster = 2;
+		}
+		else if (wParam == '9')
+		{
+			rotatehead += 2;
+		}
+		else if (wParam == '0')
+		{
+			rotatehead -= 2;
 		}
 		break;
 
@@ -628,7 +649,7 @@ void head_sphere()
 		headsphere = gluNewQuadric();
 		glColor3f(1, 0, 0);
 		gluQuadricDrawStyle(headsphere, GLU_FILL);
-		gluSphere(headsphere, 2.95, 20, 10);
+		gluSphere(headsphere, 2.95, 30, 30);
 		gluDeleteQuadric(headsphere);
 	glPopMatrix();
 }
@@ -703,13 +724,162 @@ void head_eyesphere()
 //----------------------------leg thruster shape
 void thrustercylinder()
 {
-	GLUquadricObj* cylinderright = NULL;
-	cylinderright = gluNewQuadric();
+	GLUquadricObj* thrustercylinder = NULL;
+	thrustercylinder = gluNewQuadric();
 	glColor3f(0.4, 0.4, 0.4);
 	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(cylinderright, GLU_FILL);
-	gluCylinder(cylinderright, 0.5, 0.5, 1.5, 20, 5);
-	gluDeleteQuadric(cylinderright);
+	gluQuadricDrawStyle(thrustercylinder, GLU_FILL);
+	gluCylinder(thrustercylinder, 0.2, 0.2, 1.5, 20, 5);
+	gluDeleteQuadric(thrustercylinder);
+}
+
+void thrustercone() 
+{
+	GLUquadricObj* thrustercone = NULL;
+	thrustercone = gluNewQuadric();
+	glColor3f(0.4, 0.4, 0.4);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(thrustercone, GLU_FILL);
+	gluCylinder(thrustercone, 0.2, 0.1, 0.5, 20, 5);
+	gluDeleteQuadric(thrustercone);
+}
+
+void thrusterjoint1()
+{
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.3f, -0.1f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.0f, -0.1f);
+	glVertex3f(0.3f, 0.0f, -0.1f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.3f, 0.0f, -0.1f);
+	glVertex3f(0.3f, 0.3f, -0.1f);
+	glVertex3f(0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.0f, 0.1f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.3f, 0.0f, 0.1f);
+	glVertex3f(0.3f, 0.0f, -0.1f);
+	glVertex3f(-0.3f, 0.0f, -0.1f);
+	glVertex3f(-0.3f, 0.0f, 0.1f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-0.3f, 0.0f, 0.1f);
+	glVertex3f(-0.3f, 0.0f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, 0.1f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.0f, 0.1f);
+	glVertex3f(-0.3f, 0.0f, 0.1f);
+	glEnd();
+}
+
+void thrusterjoint2()
+{
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, -0.3f, 0.1f);
+	glVertex3f(0.3f, -0.3f, -0.1f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.3f, -0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.0f, -0.1f);
+	glVertex3f(0.3f, -0.6f, -0.1f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.3f, -0.6f, -0.1f);
+	glVertex3f(0.3f, -0.3f, -0.1f);
+	glVertex3f(0.3f, -0.3f, 0.1f);
+	glVertex3f(0.3f, -0.6f, 0.1f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.3f, -0.6f, 0.1f);
+	glVertex3f(0.3f, -0.6f, -0.1f);
+	glVertex3f(-0.3f, 0.0f, -0.1f);
+	glVertex3f(-0.3f, 0.0f, 0.1f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-0.3f, 0.0f, 0.1f);
+	glVertex3f(-0.3f, 0.0f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, 0.3f, 0.1f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, -0.3f, 0.1f);
+	glVertex3f(0.3f, -0.6f, 0.1f);
+	glVertex3f(-0.3f, 0.0f, 0.1f);
+	glEnd();
+}
+
+void thrusterjoint3()
+{
+	glBegin(GL_QUADS);
+	//top
+	glVertex3f(-0.3f, -0.3f, -0.1f);
+	glVertex3f(-0.3f, -0.3f, 0.1f);
+	glVertex3f(0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.3f, -0.1f);
+
+	//back
+	//glColor3f(1, 0, 0);
+	glVertex3f(0.3f, 0.3f, -0.1f);
+	glVertex3f(-0.3f, -0.3f, -0.1f);
+	glVertex3f(-0.3f, -0.6f, -0.1f);
+	glVertex3f(0.3f, 0.0f, -0.1f);
+
+	//right
+	//glColor3f(0, 1, 0);
+	glVertex3f(0.3f, 0.0f, -0.1f);
+	glVertex3f(0.3f, 0.3f, -0.1f);
+	glVertex3f(0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.0f, 0.1f);
+
+	//bottom
+	//glColor3f(0, 0, 1);
+	glVertex3f(0.3f, 0.0f, 0.1f);
+	glVertex3f(0.3f, 0.0f, -0.1f);
+	glVertex3f(-0.3f, -0.6f, -0.1f);
+	glVertex3f(-0.3f, -0.6f, 0.1f);
+
+	//left
+	//glColor3f(1, 1, 0);
+	glVertex3f(-0.3f, -0.6f, 0.1f);
+	glVertex3f(-0.3f, -0.6f, -0.1f);
+	glVertex3f(-0.3f, -0.3f, -0.1f);
+	glVertex3f(-0.3f, -0.3f, 0.1f);
+
+	//front
+	//glColor3f(1, 0, 1);
+	glVertex3f(-0.3f, -0.3f, 0.1f);
+	glVertex3f(0.3f, 0.3f, 0.1f);
+	glVertex3f(0.3f, 0.0f, 0.1f);
+	glVertex3f(-0.3f, -0.6f, 0.1f);
+	glEnd();
 }
 //------------------------------
 
@@ -718,9 +888,12 @@ void thrustercylinder()
 void head_combined()
 {
 	glPushMatrix();
-		head_sphere();
-		head_eyesphere();
-		head_eyepiece(0.0);
+	glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
+		glPushMatrix();
+			head_sphere();
+			head_eyesphere();
+			head_eyepiece(0.0);
+		glPopMatrix();
 	glPopMatrix();
 }
 
@@ -791,7 +964,6 @@ void center_leg_connector()
 	glPopMatrix();
 }
 //-------------------------------
-
 
 
 //-----------------------------Combined Leg shapes
@@ -886,6 +1058,29 @@ void left_leg()
 	glPopMatrix();
 
 	glPushMatrix();
+		glTranslatef(-(thrustermove), 0.0f, 0.0f);
+		glPushMatrix();
+			glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+			glTranslatef(-4.1f, 0.0f, 2.7f);
+			thrustercylinder();
+		glPopMatrix();
+		glPushMatrix();
+			glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+			glTranslatef(-4.1f, 0.0f, 4.2f);
+			thrustercone();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(-3.6f, -3.1f, 0.0f);
+			thrusterjoint1();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(-3.6f, -3.7f, 0.0f);
+			thrusterjoint2();
+		glPopMatrix();
+	glPopMatrix();
+
+	//--------tyre------------
+	glPushMatrix();
 		glRotatef(270, 0, 1.0, 0);
 		glTranslatef(0.0f, -8.3f, 3.4f);
 
@@ -928,6 +1123,7 @@ void left_leg()
 		}
 		glEnd();
 	glPopMatrix();
+	//------------------------
 }
 
 //6 polygon + 42 polygon
@@ -1024,6 +1220,29 @@ void right_leg()
 	glPopMatrix();
 
 	glPushMatrix();
+		glTranslatef(thrustermove, 0.0f, 0.0f);
+		glPushMatrix();
+			glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+			glTranslatef(4.1f, 0.0f, 2.7f);
+			thrustercylinder();
+		glPopMatrix();
+		glPushMatrix();
+			glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+			glTranslatef(4.1f, 0.0f, 4.2f);
+			thrustercone();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(3.6f, -3.1f, 0.0f);
+			thrusterjoint1();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(3.6f, -3.7f, 0.0f);
+			thrusterjoint3();
+		glPopMatrix();
+	glPopMatrix();
+
+	//----------------tyre----------------
+	glPushMatrix();
 		glRotatef(90, 0, 1.0, 0);
 		glTranslatef(0.0f, -8.3f, 3.4f);
 
@@ -1066,6 +1285,7 @@ void right_leg()
 		}
 		glEnd();
 	glPopMatrix();
+	//------------------------------------
 }
 
 //3 polygon + 12 polygon
@@ -1264,7 +1484,7 @@ void display()
 				glTranslatef(0.0f, 1.0f, 0.0f);
 
 				head_combined();
-				//gatlingGun();
+				gatlingGun();
 				body_cylinder();
 				body_bottom();
 			
@@ -1287,7 +1507,7 @@ void display()
 
 			glPushMatrix();
 
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 				glPushMatrix();
 					join_cylinderleft();
@@ -1472,6 +1692,25 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		}
 		//--------------------------------------
 
+		//thruster movement---------------------
+		if (activatethruster == 1) {
+			thrustermove += 0.1;
+		}
+		else if (activatethruster == 2) {
+			thrustermove -= 0.1;
+		}
+
+		if (thrustermove >= 1.1)
+		{
+			thrustermove = 1.1;
+			activatethruster = 0;
+		}
+		else if (thrustermove <= 0.1)
+		{
+			thrustermove = 0;
+			activatethruster = 0;
+		}
+		//--------------------------------------
 
 		display();
 

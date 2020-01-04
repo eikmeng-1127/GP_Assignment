@@ -12,9 +12,16 @@
 GLfloat gunmove = -5.0f;
 GLfloat gunrotate = 270.0f;
 GLfloat legmove = 2.5f;
+GLfloat bodyrotate = 0;
+GLfloat movex = 0.0;
+GLfloat movey = 0.0;
+GLfloat movez = 0.0;
+GLfloat rotater2 = 0;
 
 boolean activategun = false;
 boolean rotategun = false;
+int activateleg = 0;
+int activatebodyrotate = 0;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -72,25 +79,43 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'Z')
 		{
-			if (legmove > 2.5f)
-			{
-				break;
-			}
-			else
-			{
-				legmove += 0.1;
-			}
+			activateleg = 1;
 		}
 		else if (wParam == 'X')
 		{
-			if (legmove < 0.0f)
-			{
-				break;
-			}
-			else
-			{
-				legmove -= 0.1;
-			}
+			activateleg = 2;
+		}
+		else if (wParam == 'C')
+		{
+			activatebodyrotate = 1;
+		} 
+		else if (wParam == 'V')
+		{
+			activatebodyrotate = 2;
+		} 
+		else if (wParam == 'A')
+		{
+			movex += 0.2;
+		}
+		else if (wParam == 'D')
+		{
+			movex -= 0.2;
+		}
+		else if (wParam == 'W')
+		{
+			movez += 0.2;
+		}
+		else if (wParam == 'S')
+		{
+			movez -= 0.2;
+		}
+		else if (wParam == 'Q')
+		{
+			rotater2 += 2;
+		}
+		else if (wParam == 'E')
+		{
+			rotater2 -= 2;
 		}
 		break;
 
@@ -593,6 +618,15 @@ void quadforcenterleg_2()
 
 
 
+//----------------------------leg thruster shape
+void thrustercylinder()
+{
+
+}
+//------------------------------
+
+
+
 //-----------------------------Shapes for body
 void head_sphere()
 {
@@ -926,54 +960,68 @@ void display()
 
 	glMatrixMode(GL_MODELVIEW);
 
-	//head
 	glPushMatrix();
+	glTranslatef(movex, movey, movez);
+	glRotatef(rotater2, 0.0f, 1.0f, 0.0f);
+		//body
 		glPushMatrix();
-			head_sphere();
-		glPopMatrix();
+			glTranslatef(0.0f, -1.0f, 0.0f);
+			glRotatef(-bodyrotate, 1.0f, 0.0f, 0.0f);
+			glTranslatef(0.0f, 1.0f, 0.0f);
+
+			//head
+			glPushMatrix();
+				glPushMatrix();
+					head_sphere();
+				glPopMatrix();
+				glPushMatrix();
+					gatlingGun();
+				glPopMatrix();
+			glPopMatrix();
+
+			glPushMatrix();
+				body_cylinder();
+			glPopMatrix();
+			glPushMatrix();
+				body_bottom();
+			glPopMatrix();
+
+			glPushMatrix();
+				glTranslatef(0.0f, legmove, 0.0f);
+					glPushMatrix();
+						center_leg_connector();
+					glPopMatrix();
+
+					glPushMatrix();
+						glTranslatef(0.0f, -8.0f, 0.0f);
+						glRotatef(bodyrotate, 1.0f, 0.0f, 0.0f); //mmax 25
+						glTranslatef(0.0f, 8.0f, 0.0f);
+						center_leg();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+
+		//kaki
 		glPushMatrix();
-			gatlingGun();
+			glPushMatrix();
+				join_cylinderleft();
+			glPopMatrix();
+
+			glPushMatrix();
+				left_leg();
+			glPopMatrix();
+
+			glPushMatrix();
+				join_cylinderright();
+			glPopMatrix();
+
+			glPushMatrix();
+				right_leg();
+			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
 
-	//body
-	glPushMatrix();
-		body_cylinder();
-	glPopMatrix();
-
-	glPushMatrix();
-		body_bottom();
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(0.0f, legmove, 0.0f);
-		glPushMatrix();
-		center_leg_connector();
-		glPopMatrix();
-
-		glPushMatrix();
-		center_leg();
-		glPopMatrix();
-	glPopMatrix();
-
-	//kaki
-	glPushMatrix();
-		glPushMatrix();
-			join_cylinderleft();
-		glPopMatrix();
-
-		glPushMatrix();
-			left_leg();
-		glPopMatrix();
-
-		glPushMatrix();
-			join_cylinderright();
-		glPopMatrix();
-
-		glPushMatrix();
-			right_leg();
-		glPopMatrix();
-	glPopMatrix();
+	
 
 
 	//Show direction
@@ -1056,6 +1104,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			DispatchMessage(&msg);
 		}
 
+		//gattinggun movement------------------
 		if (activategun == true)
 		{
 			if (gunmove < 3.5f)
@@ -1093,6 +1142,49 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 				gunrotate -= 1.0f;
 			}
 		}
+		//--------------------------------------
+
+		//center leg movement-------------------
+		if (activateleg == 1) {
+			legmove += 0.1;
+		}
+		else if (activateleg == 2) {
+			legmove -= 0.1;;
+		}
+
+		if (legmove >= 2.5) {
+			legmove = 2.5f;
+			activateleg = 0;
+		}
+		else if (legmove <= -0.7) {
+			legmove = -0.7f;
+			activateleg = 0;
+		}
+		//--------------------------------------
+
+		//body movement-------------------------
+		if (activatebodyrotate == 1) {
+			bodyrotate += 1;
+		}
+		else if (activatebodyrotate == 2) {
+			activateleg = 1;
+
+			bodyrotate -= 1;
+		}
+
+		if (bodyrotate >= 25)
+		{
+			bodyrotate = 25;
+			activatebodyrotate = 0;
+			activateleg = 2;
+		}
+		else if (bodyrotate <= 0.1)
+		{
+			bodyrotate = 0;
+			activatebodyrotate = 0;
+		}
+		//--------------------------------------
+
 
 		display();
 

@@ -161,6 +161,7 @@ bool initPixelFormat(HDC hdc)
 }
 
 //----------------------------- Shapes for legs
+//1 polygon
 void join_cylinderleft()
 {
 	glRotatef(270, 0, 1.0, 0);
@@ -175,6 +176,7 @@ void join_cylinderleft()
 	gluDeleteQuadric(cylinderleft);
 }
 
+//1 polygon
 void join_cylinderright()
 {
 	glRotatef(90, 0, 1.0, 0);
@@ -189,7 +191,7 @@ void join_cylinderright()
 	gluDeleteQuadric(cylinderright);
 }
 
-//top rectangle for leg
+//top rectangle for leg (6 polygon)
 void rectangle_1(double h)
 {
 	glBegin(GL_QUADS);
@@ -236,7 +238,7 @@ void rectangle_1(double h)
 	glEnd();
 }
 
-//shape under rectangle_1
+//shape under rectangle_1 (6 polygon)
 void rectangle_2()
 {
 	glBegin(GL_QUADS);
@@ -283,7 +285,7 @@ void rectangle_2()
 	glEnd();
 }
 
-//rectangle under rectangle_2
+//rectangle under rectangle_2 (6 polygon)
 void rectangle_3(double h)
 {
 	glBegin(GL_QUADS);
@@ -330,7 +332,7 @@ void rectangle_3(double h)
 	glEnd();
 }
 
-//rectangle under rectangle_3
+//rectangle under rectangle_3 (6 polygon)
 void rectangle_4(double h)
 {
 	glBegin(GL_QUADS);
@@ -377,7 +379,7 @@ void rectangle_4(double h)
 	glEnd();
 }
 
-//rectangle under rectangle_4
+//rectangle under rectangle_4 (6 polygon)
 void rectangle_5(double h)
 {
 	glBegin(GL_QUADS);
@@ -424,7 +426,7 @@ void rectangle_5(double h)
 	glEnd();
 }
 
-//rectangle under rectangle_5
+//rectangle under rectangle_5 (6 polygon)
 void rectangle_6()
 {
 	glBegin(GL_QUADS);
@@ -471,6 +473,7 @@ void rectangle_6()
 	glEnd();
 }
 
+//(6 polygon)
 void rectangle_7(double h)
 {
 	glBegin(GL_QUADS);
@@ -517,9 +520,9 @@ void rectangle_7(double h)
 	glEnd();
 }
 
+//(6 polygon)
 void quadforcenterleg()
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glBegin(GL_QUADS);
 		//top
 		glVertex3f(-0.8f, 1.0f, -0.8f);
@@ -564,6 +567,7 @@ void quadforcenterleg()
 	glEnd();
 }
 
+//(6 polygon)
 void quadforcenterleg_2()
 {
 	glBegin(GL_QUADS);
@@ -612,17 +616,8 @@ void quadforcenterleg_2()
 //------------------------------
 
 
-
-//----------------------------leg thruster shape
-void thrustercylinder()
-{
-
-}
-//------------------------------
-
-
-
-//-----------------------------Shapes for body
+//----------------------------Shapes for head
+//1 polygon
 void head_sphere()
 {
 	glPushMatrix();
@@ -638,6 +633,98 @@ void head_sphere()
 	glPopMatrix();
 }
 
+void head_eyepiece(float h)
+{
+	glPushMatrix();
+		glRotatef(30, -1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 2.15f);
+
+		glColor3f(0.0, 0.0, 1.0);
+		glBegin(GL_QUADS);
+		//top
+		glVertex3f(-0.6f, 1.0f, 0.0f);
+		glVertex3f(-0.6f, 1.0f, 1.0f);
+		glVertex3f(0.6f, 1.0f, 1.0f);
+		glVertex3f(0.6f, 1.0f, 0.0f);
+
+		//back
+		//glColor3f(1, 0, 0);
+		glVertex3f(0.6f, 1.0f, 0.0f);
+		glVertex3f(-0.6f, 1.0f, 0.0f);
+		glVertex3f(-1.0f, 0.0f - h, 0.0f);
+		glVertex3f(0.6f, 0.0f - h, 0.0f);
+
+		//right
+		//glColor3f(0, 1, 0);
+		glVertex3f(0.6f, 0.0f - h, 0.0f);
+		glVertex3f(0.6f, 1.0f, 0.0f);
+		glVertex3f(0.6f, 1.0f, 1.0f);
+		glVertex3f(0.6f, 0.0f - h, 1.0f);
+
+		//bottom
+		//glColor3f(0, 0, 1);
+		glVertex3f(0.6f, 0.0f - h, 1.0f);
+		glVertex3f(0.6f, 0.0f - h, 0.0f);
+		glVertex3f(-1.0f, 0.0f - h, 0.0f);
+		glVertex3f(-1.0f, 0.0f - h, 1.0f);
+
+		//left
+		//glColor3f(1, 1, 0);
+		glVertex3f(-1.0f, 0.0f - h, 1.0f);
+		glVertex3f(-1.0f, 0.0f - h, 0.0f);
+		glVertex3f(-0.6f, 1.0f, 0.0f);
+		glVertex3f(-0.6f, 1.0f, 1.0f);
+
+		//front
+		//glColor3f(1, 0, 1);
+		glVertex3f(-0.6f, 1.0f, 1.0f);
+		glVertex3f(0.6f, 1.0f, 1.0f);
+		glVertex3f(0.6f, 0.0f - h, 1.0f);
+		glVertex3f(-1.0f, 0.0f - h, 1.0f);
+		glEnd();
+	glPopMatrix();
+}
+
+void head_eyesphere()
+{
+	glPushMatrix();
+		glTranslatef(0.0f, 2.0f, 2.4f);
+		GLUquadricObj* eyesphere = NULL;
+		eyesphere = gluNewQuadric();
+		glColor3f(0, 0, 0);
+		gluQuadricDrawStyle(eyesphere, GLU_FILL);
+		gluSphere(eyesphere, 0.35, 20, 10);
+		gluDeleteQuadric(eyesphere);
+	glPopMatrix();
+}
+//----------------------------
+
+
+//----------------------------leg thruster shape
+void thrustercylinder()
+{
+	GLUquadricObj* cylinderright = NULL;
+	cylinderright = gluNewQuadric();
+	glColor3f(0.4, 0.4, 0.4);
+	//gluQuadricTexture(cylinder, TRUE);
+	gluQuadricDrawStyle(cylinderright, GLU_FILL);
+	gluCylinder(cylinderright, 0.5, 0.5, 1.5, 20, 5);
+	gluDeleteQuadric(cylinderright);
+}
+//------------------------------
+
+
+//-----------------------------Shapes for body
+void head_combined()
+{
+	glPushMatrix();
+		head_sphere();
+		head_eyesphere();
+		head_eyepiece(0.0);
+	glPopMatrix();
+}
+
+//1 polygon
 void body_cylinder()
 {
 	glPushMatrix();
@@ -654,6 +741,7 @@ void body_cylinder()
 	glPopMatrix();
 }
 
+//2 polygon
 void body_bottom()
 {
 	glPushMatrix();
@@ -686,6 +774,7 @@ void body_bottom()
 	glPopMatrix();
 }
 
+//1 polygon
 void center_leg_connector()
 {
 	glPushMatrix();
@@ -701,12 +790,12 @@ void center_leg_connector()
 		gluDeleteQuadric(centerlegcylinder);
 	glPopMatrix();
 }
-
 //-------------------------------
 
 
 
 //-----------------------------Combined Leg shapes
+//6 polygon + 42 polygon
 void left_leg()
 {
 	//top cylinder
@@ -841,6 +930,7 @@ void left_leg()
 	glPopMatrix();
 }
 
+//6 polygon + 42 polygon
 void right_leg()
 {
 	//top cylinder
@@ -978,6 +1068,7 @@ void right_leg()
 	glPopMatrix();
 }
 
+//3 polygon + 12 polygon
 void center_leg()
 {
 	glPushMatrix();
@@ -1040,8 +1131,8 @@ void center_leg()
 //-----------------------------
 
 
-
 //-----------------------------Gatling gun
+//1 polygon
 void gg_mainbarrel() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 1.5f);
@@ -1056,6 +1147,7 @@ void gg_mainbarrel() {
 	glPopMatrix();
 }
 
+//6 polygon
 void gg_sidebarrels() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 2.0f);
@@ -1075,6 +1167,7 @@ void gg_sidebarrels() {
 	glPopMatrix();
 }
 
+//1 polygon
 void gg_barrelholder() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 6.0f);
@@ -1097,6 +1190,7 @@ void gg_barrels() {
 	glPopMatrix();
 }
 
+//1 polygon
 void gg_body() {
 	glPushMatrix();
 	glTranslatef(0.0f, 0.0f, 1.0f);
@@ -1111,6 +1205,7 @@ void gg_body() {
 	glPopMatrix();
 }
 
+//1 polygon
 void gg_connnector() {
 	glPushMatrix();
 
@@ -1124,9 +1219,9 @@ void gg_connnector() {
 	glPopMatrix();
 }
 
+//1 polygon
 void gg_head()
 {
-
 	GLUquadricObj* gunheadsphere = NULL;
 	gunheadsphere = gluNewQuadric();
 	glColor3f(0, 0, 1);
@@ -1168,8 +1263,8 @@ void display()
 				glRotatef(-bodyrotate, 1.0f, 0.0f, 0.0f);
 				glTranslatef(0.0f, 1.0f, 0.0f);
 
-				head_sphere();
-				gatlingGun();
+				head_combined();
+				//gatlingGun();
 				body_cylinder();
 				body_bottom();
 			
@@ -1192,7 +1287,7 @@ void display()
 
 			glPushMatrix();
 
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 				glPushMatrix();
 					join_cylinderleft();

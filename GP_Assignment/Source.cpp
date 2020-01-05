@@ -2197,7 +2197,7 @@ void display()
 				glTranslatef(0.0f, 1.0f, 0.0f);
 
 				head_combined();
-				//gatlingGun();
+				gatlingGun();
 				body_cylinder();
 				body_bottom();
 				backthruster_combined();

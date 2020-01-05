@@ -20,6 +20,10 @@ GLfloat backthrustermove = 0.0;
 GLfloat rotatehead = 0;
 GLfloat secondeyemove = 0;
 GLfloat rotateeye = 0;
+GLfloat shootgun = 0;
+GLfloat rotatelighter = 0;
+GLfloat rotatelighter2 = 0;
+GLfloat lschambermove = 0;
 
 GLfloat movex = 0.0;
 GLfloat movey = 0.0;
@@ -37,6 +41,9 @@ int activatebodyrotate = 0;
 int activatethruster = 0;
 int activatebackthruster = 0;
 int activatesecondeye = 0;
+int activatelighter = 0;
+int activatelighter2 = 0;
+int activatelightsaberchamber = 0;
 
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -95,6 +102,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'Z')
 		{
 			activatesecondeye = 1;
+			PlaySound("Processing_R2D2.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'X')
 		{
@@ -109,6 +117,11 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		{
 			activatebodyrotate = 2;
 		} 
+		else if (wParam == 'B')
+		{
+			shootgun += 10;
+			PlaySound("LAZER.wav", NULL, SND_ASYNC);
+		}
 		else if (wParam == 'A')
 		{
 			movex += 0.2;
@@ -156,6 +169,22 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == '8')
 		{
 			rotateeye -= 2;
+		}
+		else if (wParam == 'K')
+		{
+			activatelighter = 1;
+		}
+		else if (wParam == 'L')
+		{
+			activatelighter = 2;
+		}
+		else if (wParam == 'H')
+		{
+			activatelightsaberchamber = 1;
+		}
+		else if (wParam == 'J')
+		{
+			activatelightsaberchamber = 2;
 		}
 		break;
 
@@ -802,6 +831,167 @@ void head_secondeyesphere()
 	gluSphere(eyesphere, 0.35, 20, 10);
 	gluDeleteQuadric(eyesphere);
 }
+
+void head_eyecone()
+{
+	glPushMatrix();
+		glTranslatef(0.0f, 0.0f, 0.2f);
+		GLUquadricObj* thrustercylinder = NULL;
+		thrustercylinder = gluNewQuadric();
+		glColor3f(1, 1, 0.0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(thrustercylinder, GLU_FILL);
+		gluCylinder(thrustercylinder, 0.3, 0.25, 0.5, 20, 5);
+		gluDeleteQuadric(thrustercylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex2 = 0.0;
+		GLfloat circley2 = 0.0;
+		GLfloat circlerad2 = 0.25;
+
+		glTranslatef(0.0f, 0.0f, 0.6f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.0, 0.0, 0.0);
+		glVertex2f(circlex2, circley2);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex2 + (circlerad2 * cos(i * twopi / triangleAmount)), circley2 + (circlerad2 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+}
+
+void head_eyecylinder1()
+{
+	glPushMatrix();
+		GLUquadricObj* thrustercylinder = NULL;
+		thrustercylinder = gluNewQuadric();
+		glColor3f(1, 1, 0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(thrustercylinder, GLU_FILL);
+		gluCylinder(thrustercylinder, 0.35, 0.35, 0.3, 20, 5);
+		gluDeleteQuadric(thrustercylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex1 = 0.0;
+		GLfloat circley1 = 0.0;
+		GLfloat circlerad = 0.35;
+
+		glTranslatef(0.0f, 0.0f, 0.3f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex2f(circlex1, circley1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+}
+
+void head_rectangle()
+{
+	glColor3f(0, 0, 1);
+	glBegin(GL_QUADS);
+	//top
+		glVertex3f(-0.5f, 0.8f, -0.3f);
+		glVertex3f(-0.5f, 0.8f, 0.3f);
+		glVertex3f(0.5f, 0.8f, 0.3f);
+		glVertex3f(0.5f, 0.8f, -0.3f);
+
+		//back
+		//glColor3f(1, 0, 0);
+		glVertex3f(0.5f, 0.8f, -0.3f);
+		glVertex3f(-0.5f, 0.8f, -0.3f);
+		glVertex3f(-0.5f, 0.0f, -0.3f);
+		glVertex3f(0.5f, 0.0f, -0.3f);
+
+		//right
+		//glColor3f(0, 1, 0);
+		glVertex3f(0.5f, 0.0f, -0.3f);
+		glVertex3f(0.5f, 0.8f, -0.3f);
+		glVertex3f(0.5f, 0.8f, 0.3f);
+		glVertex3f(0.5f, 0.0f, 0.3f);
+
+		//bottom
+		//glColor3f(0, 0, 1);
+		glVertex3f(0.5f, 0.0f, 0.3f);
+		glVertex3f(0.5f, 0.0f, -0.3f);
+		glVertex3f(-0.5f, 0.0f, -0.3f);
+		glVertex3f(-0.5f, 0.0f, 0.3f);
+
+		//left
+		//glColor3f(1, 1, 0);
+		glVertex3f(-0.5f, 0.0f, 0.3f);
+		glVertex3f(-0.5f, 0.0f, -0.3f);
+		glVertex3f(-0.5f, 0.8f, -0.3f);
+		glVertex3f(-0.5f, 0.8f, 0.3f);
+
+		//front
+		//glColor3f(1, 0, 1);
+		glVertex3f(-0.5f, 0.8f, 0.3f);
+		glVertex3f(0.5f, 0.8f, 0.3f);
+		glVertex3f(0.5f, 0.0f, 0.3f);
+		glVertex3f(-0.5f, 0.0f, 0.3f);
+	glEnd();
+}
+
+void head_colourchangingsphere()
+{
+	GLUquadricObj* eyesphere = NULL;
+	eyesphere = gluNewQuadric();
+	glColor3f(1, 0, 0);
+	gluQuadricDrawStyle(eyesphere, GLU_FILL);
+	gluSphere(eyesphere, 0.30, 20, 10);
+	gluDeleteQuadric(eyesphere);
+}
+
+void head_lightsaberchamber()
+{
+	glBegin(GL_QUADS);
+	//top
+	glColor3f(0, 0, 1);
+	glVertex3f(-1.0f, 0.6f, -0.6f);
+	glVertex3f(-0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 1.0f, 0.6f);
+	glVertex3f(1.0f, 0.6f, -0.6f);
+
+	//back
+	glColor3f(0.9, 0.9, 0.9);
+	glVertex3f(1.0f, 0.6f, -0.6f);
+	glVertex3f(-1.0f, 0.6f, -0.6f);
+	glVertex3f(-1.0f, 0.0f, -0.6f);
+	glVertex3f(1.0f, 0.0f, -0.6f);
+
+	//right
+	glColor3f(0.9, 0.9, 0.9);
+	glVertex3f(1.0f, 0.0f, -0.6f);
+	glVertex3f(1.0f, 0.6f, -0.6f);
+	glVertex3f(0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 0.0f, 0.6f);
+
+	//bottom
+	glColor3f(0, 0, 1);
+	glVertex3f(0.5f, 0.0f, 0.6f);
+	glVertex3f(1.0f, 0.0f, -0.6f);
+	glVertex3f(-1.0f, 0.0f, -0.6f);
+	glVertex3f(-0.5f, 0.0f, 0.6f);
+
+	//left
+	glColor3f(0.9, 0.9, 0.9);
+	glVertex3f(-0.5f, 0.0f, 0.6f);
+	glVertex3f(-1.0f, 0.0f, -0.6f);
+	glVertex3f(-1.0f, 0.6f, -0.6f);
+	glVertex3f(-0.5f, 1.0f, 0.6f);
+
+	//front
+	glColor3f(0.9, 0.9, 0.9);
+	glVertex3f(-0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 1.0f, 0.6f);
+	glVertex3f(0.5f, 0.0f, 0.6f);
+	glVertex3f(-0.5f, 0.0f, 0.6f);
+	glEnd();
+}
 //----------------------------
 
 
@@ -1084,9 +1274,12 @@ void gg_barrelholder() {
 
 void gg_barrels() {
 	glPushMatrix();
-		gg_mainbarrel();
-		gg_sidebarrels();
-		gg_barrelholder();
+		glRotatef(shootgun, 0.0f, 0.0f, 1.0f);
+		glPushMatrix();
+			gg_mainbarrel();
+			gg_sidebarrels();
+			gg_barrelholder();
+		glPopMatrix();
 	glPopMatrix();
 }
 
@@ -1142,6 +1335,198 @@ void gatlingGun() {
 }
 //-----------------------------
 
+//-----------------------------Lighter
+void lightercylinder()
+{
+	glPushMatrix();
+		glRotatef(90.0, 0.0f, 1.0f, 0.0f);
+		glTranslatef(-2.1f, -0.5f, -1.6f);
+
+		GLUquadricObj* thrustercylinder = NULL;
+		thrustercylinder = gluNewQuadric();
+		glColor3f(0.4, 0.4, 0.4);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(thrustercylinder, GLU_FILL);
+		gluCylinder(thrustercylinder, 0.1, 0.1, 3.2, 20, 5);
+		gluDeleteQuadric(thrustercylinder);
+	glPopMatrix();
+}
+
+void lighterhead()
+{
+	glPushMatrix();
+		glTranslatef(1.3f, -0.5f, 2.1f);
+		glColor3f(1, 0, 0);
+		glBegin(GL_QUADS);
+			//top
+			glVertex3f(-0.3f, 0.2f, -0.1f);
+			glVertex3f(-0.3f, 0.2f, 0.1f);
+			glVertex3f(0.3f, 0.2f, 0.1f);
+			glVertex3f(0.3f, 0.2f, -0.1f);
+
+			//back
+			//glColor3f(1, 0, 0);
+			glVertex3f(0.3f, 0.2f, -0.1f);
+			glVertex3f(-0.3f, 0.2f, -0.1f);
+			glVertex3f(-0.3f, 0.0f, -0.1f);
+			glVertex3f(0.3f, 0.0f, -0.1f);
+
+			//right
+			//glColor3f(0, 1, 0);
+			glVertex3f(0.3f, 0.0f, -0.1f);
+			glVertex3f(0.3f, 0.2f, -0.1f);
+			glVertex3f(0.3f, 0.2f, 0.1f);
+			glVertex3f(0.3f, 0.0f, 0.1f);
+
+			//bottom
+			//glColor3f(0, 0, 1);
+			glVertex3f(0.3f, 0.0f, 0.1f);
+			glVertex3f(0.3f, 0.0f, -0.1f);
+			glVertex3f(-0.3f, 0.0f, -0.1f);
+			glVertex3f(-0.3f, 0.0f, 0.1f);
+
+			//left
+			//glColor3f(1, 1, 0);
+			glVertex3f(-0.3f, 0.0f, 0.1f);
+			glVertex3f(-0.3f, 0.0f, -0.1f);
+			glVertex3f(-0.3f, 0.2f, -0.1f);
+			glVertex3f(-0.3f, 0.2f, 0.1f);
+
+			//front
+			//glColor3f(1, 0, 1);
+			glVertex3f(-0.3f, 0.2f, 0.1f);
+			glVertex3f(0.3f, 0.2f, 0.1f);
+			glVertex3f(0.3f, 0.0f, 0.1f);
+			glVertex3f(-0.3f, 0.0f, 0.1f);
+		glEnd();
+	glPopMatrix();
+}
+//-----------------------------
+
+
+//-----------------------------Lightsaber
+void lightsaber_main()
+{
+	glPushMatrix();
+		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, -1.5f);
+
+		GLUquadricObj* lsmain = NULL;
+		lsmain = gluNewQuadric();
+		glColor3f(1, 1, 0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(lsmain, GLU_FILL);
+		gluCylinder(lsmain, 0.15, 0.15, 3.5, 20, 5);
+		gluDeleteQuadric(lsmain);
+	glPopMatrix();
+}
+
+void lightsaber_grip()
+{
+	glPushMatrix();
+		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 0.1f);
+
+		GLUquadricObj* lsgrip = NULL;
+		lsgrip = gluNewQuadric();
+		glColor3f(0, 1, 0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(lsgrip, GLU_FILL);
+		gluCylinder(lsgrip, 0.2, 0.2, 2.0, 20, 5);
+		gluDeleteQuadric(lsgrip);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex1 = 0.0;
+		GLfloat circley1 = 0.0;
+		GLfloat circlerad = 0.2;
+
+		glRotatef(90, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 2.1f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex2f(circlex1, circley1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex2 = 0.0;
+		GLfloat circley2 = 0.0;
+		GLfloat circlerad2 = 0.2;
+
+		glRotatef(90, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 0.1f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex2f(circlex2, circley2);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex2 + (circlerad2 * cos(i * twopi / triangleAmount)), circley2 + (circlerad2 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+}
+
+void lightsaber_cap()
+{
+	glPushMatrix();
+		glRotatef(270.0, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, 1.0f);
+
+		GLUquadricObj* lscap = NULL;
+		lscap = gluNewQuadric();
+		glColor3f(0, 1, 0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(lscap, GLU_FILL);
+		gluCylinder(lscap, 0.2, 0.3, 0.5, 20, 5);
+		gluDeleteQuadric(lscap);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex1 = 0.0;
+		GLfloat circley1 = 0.0;
+		GLfloat circlerad = 0.3;
+
+		glRotatef(90, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, -1.5f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.0, 1.0, 0.0);
+		glVertex2f(circlex1, circley1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+}
+
+void lightsaber_centergrip()
+{
+	glPushMatrix();
+		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
+		glTranslatef(0.0f, 0.0f, -0.4f);
+
+		GLUquadricObj* lsgrip = NULL;
+		lsgrip = gluNewQuadric();
+		glColor3f(0, 1, 0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(lsgrip, GLU_FILL);
+		gluCylinder(lsgrip, 0.2, 0.2, 2.0, 20, 5);
+		gluDeleteQuadric(lsgrip);
+	glPopMatrix();
+}
+
+void lightsaber_combined()
+{
+	glPushMatrix();
+		lightsaber_main();
+		lightsaber_grip();
+		lightsaber_cap();
+	glPopMatrix();
+}
+//-----------------------------
+
 
 //-----------------------------Shapes for body
 void head_combined()
@@ -1149,15 +1534,39 @@ void head_combined()
 	glPushMatrix();
 		glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 		glPushMatrix();
-			head_sphere();
-			head_eyesphere();
-			head_eyepiece(0.0);
+			//head_sphere();
+			//head_eyesphere();
+			//head_eyepiece(0.0);
 			glPushMatrix();
-			glTranslatef(0.0f, secondeyemove, 0.0f);
+				glTranslatef(0.05f, 0.4f, 2.8f);
+				glPushMatrix();
+				glRotatef(-10, 1.0f, 0.0f, 0.0f);
+					glPushMatrix();
+						//head_rectangle();
+						glPushMatrix();
+						glTranslatef(0.1f, 0.4f, 0.2f);
+							//head_colourchangingsphere();
+						glPopMatrix();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+			glPushMatrix();
+				glTranslatef(1.1f, 1.0f, 2.5f);
+				glPushMatrix();
+				glRotatef(-10, 1.0f, 0.0f, 0.0f);
+					glPushMatrix();
+					glRotatef(15, 0.0f, 1.0f, 0.0f);
+						//head_eyecylinder1();
+						//head_eyecone();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+			glPushMatrix();
+				glTranslatef(0.0f, secondeyemove, 0.0f);
 				glPushMatrix();
 					glRotatef(90, 1.0f, 0.0f, 0.0f);
 					glTranslatef(0.0f, -1.3f, -1.0f);
-					head_secondeyecylinder();
+					//head_secondeyecylinder();
 				glPopMatrix();
 				glPushMatrix();
 					glTranslatef(0.0f, -1.3f, -1.3f);
@@ -1165,13 +1574,25 @@ void head_combined()
 					glTranslatef(0.0f, 1.3f, 1.3f);
 					glPushMatrix();
 						glTranslatef(0.0f, 1.0f, -1.3f);
-						head_secondeyequad();
+						//head_secondeyequad();
 					glPopMatrix();
 					glPushMatrix();
 						glTranslatef(0.0f, 1.7f, -0.85f);
-						head_secondeyesphere();
+						//head_secondeyesphere();
 					glPopMatrix();
 				glPopMatrix();
+			glPopMatrix();
+			glPushMatrix();
+				glPushMatrix();
+					//glTranslatef(0.8f, lschambermove, 0.8f);
+					glPushMatrix();
+						glRotatef(225, 0.0f, 1.0f, 0.0f);
+						head_lightsaberchamber();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+			glPushMatrix();
+				lightsaber_combined();
 			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
@@ -1244,6 +1665,24 @@ void backthruster_combined()
 			glRotatef(90, 1.0f, 0.0f, 0.0f);
 			glTranslatef(-0.8f, -0.3f, 3.5f);
 			backpackthrustercone();
+		glPopMatrix();
+	glPopMatrix();
+}
+
+void lighter_combined()
+{
+	glPushMatrix();
+		glTranslatef(-1.5f, -0.5f, 2.0f);
+		glRotatef(-rotatelighter, 0.0f, 1.0f, 0.0f);
+		glTranslatef(1.5f, 0.5f, -2.0f);
+		glPushMatrix();
+				lightercylinder();
+		glPopMatrix();
+		glPushMatrix();
+			glTranslatef(1.5f, -0.5f, 2.0f);
+			glRotatef(-rotatelighter2, 0.0f, 0.0f, 1.0f);
+			glTranslatef(-1.5f, 0.5f, -2.0f);
+			lighterhead();
 		glPopMatrix();
 	glPopMatrix();
 }
@@ -1661,7 +2100,7 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 		glPushMatrix();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 			glTranslatef(movex, movey, movez);
 			glRotatef(rotater2, 0.0f, 1.0f, 0.0f);
@@ -1674,21 +2113,22 @@ void display()
 
 				head_combined();
 				//gatlingGun();
-				body_cylinder();
-				body_bottom();
-				backthruster_combined();
+				//body_cylinder();
+				//body_bottom();
+				//backthruster_combined();
+				//lighter_combined();
 			
 				glPushMatrix();
 
 					glTranslatef(0.0f, legmove, 0.0f);
 
-					center_leg_connector();
+					//center_leg_connector();
 
 					glPushMatrix();
 						glTranslatef(0.0f, -8.0f, 0.0f);
 						glRotatef(bodyrotate, 1.0f, 0.0f, 0.0f); //mmax 25
 						glTranslatef(0.0f, 8.0f, 0.0f);
-						center_leg();
+						//center_leg();
 					glPopMatrix();
 
 				glPopMatrix();
@@ -1697,7 +2137,7 @@ void display()
 
 			glPushMatrix();
 
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 				glPushMatrix();
 					join_cylinderleft();
@@ -1944,6 +2384,81 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		{
 			secondeyemove -= 0;
 			activatesecondeye = 0;
+		}
+		//--------------------------------------
+
+		//Head rotate sound---------------------
+		if (rotatehead == 46) {
+			PlaySound("R2D2a.wav", NULL, SND_ASYNC);
+		}
+		else if (rotatehead == -46){
+			PlaySound("R2D2c.wav", NULL, SND_ASYNC);
+		}
+		//--------------------------------------
+
+		//lighter move--------------------------
+		if (activatelighter == 1)
+		{
+			rotatelighter += 2;
+			activatelighter2 = 1;
+		}
+		else if (activatelighter == 2)
+		{
+			rotatelighter -= 2;
+			activatelighter2 = 2;
+		}
+
+		if (activatelighter2 == 1)
+		{
+			rotatelighter2 += 2;
+		}
+		else if (activatelighter2 == 2)
+		{
+			rotatelighter2 -= 2;
+		}
+
+		if (rotatelighter >= 90)
+		{
+			rotatelighter = 90;
+			activatelighter = 0;
+		}
+		else if (rotatelighter <= 0.1)
+		{
+			rotatelighter = 0;
+			activatelighter = 0;
+		}
+
+		if (rotatelighter2 >= 90)
+		{
+			rotatelighter2 = 90;
+			activatelighter2 = 0;
+		}
+		else if (rotatelighter2 <= 0.1)
+		{
+			rotatelighter2 = 0;
+			activatelighter2 = 0;
+		}
+		//--------------------------------------
+
+		//lightsaber----------------------------
+		if (activatelightsaberchamber == 1)
+		{
+			lschambermove += 0.1;
+		}
+		else if (activatelightsaberchamber == 2)
+		{
+			lschambermove -= 0.1;
+		}
+
+		if (lschambermove >= 2.2)
+		{
+			lschambermove = 2.2;
+			activatelightsaberchamber = 0;
+		}
+		else if (lschambermove <= 0.1)
+		{
+			lschambermove = 0.1;
+			activatelightsaberchamber = 0;
 		}
 		//--------------------------------------
 

@@ -47,6 +47,8 @@ int activatelighter2 = 0;
 int activatelightsaberchamber = 0;
 int activatelightsaber = 0;
 int activatedeathstarplan = 0;
+boolean selectOrtho = true;
+boolean selectPerspective = false;
 
 GLuint texture = 0;
 BITMAP BMP;
@@ -202,6 +204,16 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		{
 			activatedeathstarplan = 1;
 			PlaySound("Sounds/NOMOON.wav", NULL, SND_ASYNC);
+		}
+		else if (wParam == '1')
+		{
+			selectOrtho = true;
+			selectPerspective = false;
+		}
+		else if (wParam == '2')
+		{
+			selectOrtho = false;
+			selectPerspective = true;
 		}
 		break;
 
@@ -1703,6 +1715,18 @@ void head_combined()
 				glPopMatrix();
 			glPopMatrix();
 			glPushMatrix();
+				glRotatef(190, 0.0f, 1.0f, 0.0f);
+				glTranslatef(1.1f, 1.0f, 2.5f);
+				glPushMatrix();
+					glRotatef(-10, 1.0f, 0.0f, 0.0f);
+					glPushMatrix();
+						glRotatef(15, 0.0f, 1.0f, 0.0f);
+						head_eyecylinder1();
+						head_eyecone();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+			glPushMatrix();
 				glTranslatef(0.0f, secondeyemove, 0.0f);
 				glPushMatrix();
 					glRotatef(90, 1.0f, 0.0f, 0.0f);
@@ -2316,8 +2340,9 @@ void display()
 				glPushMatrix();
 					glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 					head_combined();
-					gatlingGun();
+					//gatlingGun();
 				glPopMatrix();
+
 				body_cylinder();
 				body_bottom();
 				backthruster_combined();
@@ -2430,13 +2455,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 	MSG msg;
 	ZeroMemory(&msg, sizeof(msg));
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//glScalef(0.7, 0.7, 0.7);
-	//gluPerspective(20.0, 1.0, 1, 100);
-	//glFrustum(-30, 30, -30, 30, 20, 5000);
-	glOrtho(-12, 12, -12, 12, -20, 20);
-
 	while (true)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -2445,6 +2463,21 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+		}
+
+		if (selectOrtho == true) {
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(-12, 12, -12, 12, -20, 20);
+		}
+
+		if (selectPerspective == true) {
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			//glScalef(0.5, 0.5, 0.5);
+			gluPerspective(100.0, 1.0, 1, 100);
+			//glFrustum(-10, 10, -10, 10, 10, 100);
+			glTranslatef(0.0f, 0.0f, -12.0f);
 		}
 
 		//gattinggun movement------------------

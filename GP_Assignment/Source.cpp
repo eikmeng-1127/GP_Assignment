@@ -1636,7 +1636,6 @@ void lightsaber_combined()
 void head_combined()
 {
 	glPushMatrix();
-		glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 		glPushMatrix();
 			head_sphere();
 			head_eyesphere();
@@ -2245,8 +2244,11 @@ void display()
 				glRotatef(-bodyrotate, 1.0f, 0.0f, 0.0f);
 				glTranslatef(0.0f, 1.0f, 0.0f);
 
-				head_combined();
-				gatlingGun();
+				glPushMatrix();
+					glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
+					head_combined();
+					gatlingGun();
+				glPopMatrix();
 				body_cylinder();
 				body_bottom();
 				backthruster_combined();

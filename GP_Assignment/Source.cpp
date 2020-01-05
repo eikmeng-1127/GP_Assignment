@@ -226,10 +226,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'F')
 		{
 			activatesaw = 1;
+			PlaySound("Sounds/Small_Servo_Motor.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'G')
 		{
 			activatesaw = 2;
+			PlaySound("Sounds/Small_Servo_Motor.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'R')
 		{
@@ -250,18 +252,22 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == '3')
 		{
 			activatehand = 1;
+			PlaySound("Sounds/Small_Servo_Motor.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == '4')
 		{
 			activatehand = 2;
+			PlaySound("Sounds/Small_Servo_Motor.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'Y')
 		{
 			activatearm = 1;
+			PlaySound("Sounds/Small_Servo_Motor.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'U')
 		{
 			activatearm = 2;
+			PlaySound("Sounds/Small_Servo_Motor.wav", NULL, SND_ASYNC);
 		}
 		break;
 
@@ -1056,18 +1062,78 @@ void head_rectangle()
 	glEnd();
 }
 
+void head_rectangle2()
+{
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "computertexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//glColor3f(1, 0, 1);
+	glBegin(GL_QUADS);
+		//top
+		glVertex3f(-0.2f, 0.8f, -0.3f);
+		glVertex3f(-0.2f, 0.8f, 0.3f);
+		glVertex3f(0.2f, 0.8f, 0.3f);
+		glVertex3f(0.2f, 0.8f, -0.3f);
+
+		//back
+		//glColor3f(1, 0, 0);
+		glVertex3f(0.2f, 0.8f, -0.3f);
+		glVertex3f(-0.2f, 0.8f, -0.3f);
+		glVertex3f(-0.2f, 0.0f, -0.3f);
+		glVertex3f(0.2f, 0.0f, -0.3f);
+
+		//right
+		//glColor3f(0, 1, 0);
+		glVertex3f(0.2f, 0.0f, -0.3f);
+		glVertex3f(0.2f, 0.8f, -0.3f);
+		glVertex3f(0.2f, 0.8f, 0.3f);
+		glVertex3f(0.2f, 0.0f, 0.3f);
+
+		//bottom
+		//glColor3f(0, 0, 1);
+		glVertex3f(0.2f, 0.0f, 0.3f);
+		glVertex3f(0.2f, 0.0f, -0.3f);
+		glVertex3f(-0.2f, 0.0f, -0.3f);
+		glVertex3f(-0.2f, 0.0f, 0.3f);
+
+		//left
+		//glColor3f(1, 1, 0);
+		glVertex3f(-0.2f, 0.0f, 0.3f);
+		glVertex3f(-0.2f, 0.0f, -0.3f);
+		glVertex3f(-0.2f, 0.8f, -0.3f);
+		glVertex3f(-0.2f, 0.8f, 0.3f);
+
+		//front
+		//glColor3f(1, 0, 1);
+		glTexCoord2f(0, 1); glVertex3f(-0.2f, 0.8f, 0.3f);
+		glTexCoord2f(1, 1); glVertex3f(0.2f, 0.8f, 0.3f);
+		glTexCoord2f(1, 1); glVertex3f(0.2f, 0.0f, 0.3f);
+		glTexCoord2f(0, 0); glVertex3f(-0.2f, 0.0f, 0.3f);
+
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+}
+
 void head_colourchangingsphere()
 {
 	glPushMatrix();
 		GLUquadricObj* eyesphere = NULL;
 		eyesphere = gluNewQuadric();
-		glColor3f(1, 0, 0);
 		gluQuadricDrawStyle(eyesphere, GLU_FILL);
 		gluSphere(eyesphere, 0.30, 20, 10);
 		gluDeleteQuadric(eyesphere);
 	glPopMatrix();
 }
-
 
 void head_lightsaberchamber()
 {
@@ -2072,6 +2138,18 @@ void head_combined()
 			head_sphere();
 			head_eyesphere();
 			head_eyepiece(0.0);
+
+			glPushMatrix();
+				glTranslatef(-0.75f, 0.4f, 2.7f);
+				glRotatef(-15, 0.0f, 1.0f, 0.0f);
+				glPushMatrix();
+					glRotatef(-10, 1.0f, 0.0f, 0.0f);
+					glPushMatrix();
+						head_rectangle2();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+
 			glPushMatrix();
 				glTranslatef(0.05f, 0.4f, 2.8f);
 				glPushMatrix();
@@ -2079,12 +2157,32 @@ void head_combined()
 					glPushMatrix();
 						head_rectangle();
 						glPushMatrix();
-						glTranslatef(0.1f, 0.4f, 0.2f);
+							glTranslatef(0.1f, 0.4f, 0.2f);
+							glColor3f(1, 0, 0);
 							head_colourchangingsphere();
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
+
+			glPushMatrix();
+			glRotatef(180, 0.0f, 1.0f, 0.0f);
+				glPushMatrix();
+					glTranslatef(0.05f, 0.4f, 2.8f);
+					glPushMatrix();
+					glRotatef(-10, 1.0f, 0.0f, 0.0f);
+						glPushMatrix();
+							head_rectangle();
+							glPushMatrix();
+								glTranslatef(0.1f, 0.4f, 0.2f);
+								glColor3f(1, 1, 0);
+								head_colourchangingsphere();
+							glPopMatrix();
+						glPopMatrix();
+					glPopMatrix();
+				glPopMatrix();
+			glPopMatrix();
+
 			glPushMatrix();
 				glTranslatef(1.1f, 1.0f, 2.5f);
 				glPushMatrix();
@@ -2097,7 +2195,7 @@ void head_combined()
 				glPopMatrix();
 			glPopMatrix();
 			glPushMatrix();
-				glRotatef(190, 0.0f, 1.0f, 0.0f);
+				glRotatef(180, 0.0f, 1.0f, 0.0f);
 				glTranslatef(1.1f, 1.0f, 2.5f);
 				glPushMatrix();
 					glRotatef(-10, 1.0f, 0.0f, 0.0f);
@@ -2791,7 +2889,7 @@ void display()
 				glPushMatrix();
 					glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 					head_combined();
-					gatlingGun();
+					//gatlingGun();
 					if (activatedeathstarplan == 1)
 					{
 						display_deathstarplan();

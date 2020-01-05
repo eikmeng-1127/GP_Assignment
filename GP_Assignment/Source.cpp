@@ -47,6 +47,9 @@ int activatelighter2 = 0;
 int activatelightsaberchamber = 0;
 int activatelightsaber = 0;
 
+GLuint texture = 0;
+BITMAP BMP;
+HBITMAP hBMP = NULL;
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -121,7 +124,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		} 
 		else if (wParam == 'B')
 		{
-			shootgun += 10;
+			shootgun += 20;
 			PlaySound("LAZER.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'A')
@@ -1687,16 +1690,34 @@ void head_combined()
 void body_cylinder()
 {
 	glPushMatrix();
-		glTranslatef(0.0f, 0.25f, 0.0f);
+	glRotatef(180, 1.0f, 0.0f, 0.0f);
+	glPushMatrix();
+		glTranslatef(0.0f, 5.75f, 0.0f);
 		glRotatef(90, 1.0, 0.0, 0.0);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "r2d2_torso.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 
 		GLUquadricObj* bodycylinder = NULL;
 		bodycylinder = gluNewQuadric();
-		glColor3f(0, 0, 1);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(bodycylinder, TRUE);
 		gluQuadricDrawStyle(bodycylinder, GLU_FILL);
 		gluCylinder(bodycylinder, 3.0, 3.0, 6.0, 40, 5);
 		gluDeleteQuadric(bodycylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+
 	glPopMatrix();
 }
 
@@ -2526,7 +2547,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		//--------------------------------------
 
 		//lightsaber----------------------------
-
 		if (activatelightsaber == 1)
 		{
 			lsmove += 0.1;

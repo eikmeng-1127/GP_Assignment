@@ -107,7 +107,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'Z')
 		{
 			activatesecondeye = 1;
-			PlaySound("Processing_R2D2.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/Processing_R2D2.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'X')
 		{
@@ -116,7 +116,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'C')
 		{
 			activatebodyrotate = 1;
-			PlaySound("Playful_R2D2.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/Playful_R2D2.wav", NULL, SND_ASYNC);
 		} 
 		else if (wParam == 'V')
 		{
@@ -125,7 +125,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'B')
 		{
 			shootgun += 20;
-			PlaySound("LAZER.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/LAZER.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'A')
 		{
@@ -186,12 +186,12 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == 'H')
 		{
 			activatelightsaberchamber = 1;
-			PlaySound("LightSaberUP.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/LightSaberUP.wav", NULL, SND_ASYNC);
 		}
 		else if (wParam == 'J')
 		{
 			activatelightsaber = 2;
-			PlaySound("LightSaberDOWN.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/LightSaberDOWN.wav", NULL, SND_ASYNC);
 		}
 		break;
 
@@ -695,14 +695,29 @@ void head_sphere()
 {
 	glPushMatrix();
 		glTranslatef(0.0f, 0.25f, 0.0f);
-		glRotatef(90, 1.0, 0.0, 0.0);
+		glRotatef(180, 1.0, 0.0, 0.0);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "glossysilvertexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 
 		GLUquadricObj* headsphere = NULL;
 		headsphere = gluNewQuadric();
-		glColor3f(1, 0, 0);
+		gluQuadricTexture(headsphere, TRUE);
+		glColor3f(1, 1, 1);
 		gluQuadricDrawStyle(headsphere, GLU_FILL);
 		gluSphere(headsphere, 2.95, 30, 30);
 		gluDeleteQuadric(headsphere);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 
@@ -1730,11 +1745,24 @@ void body_bottom()
 
 		GLUquadricObj* bodybottomcylinder = NULL;
 		bodybottomcylinder = gluNewQuadric();
-		glColor3f(0, 0, 1);
+		glColor3f(0.75, 0.75, 0.75);
 		//gluQuadricTexture(cylinder, TRUE);
 		gluQuadricDrawStyle(bodybottomcylinder, GLU_FILL);
 		gluCylinder(bodybottomcylinder, 3.0, 2.5, 1.0, 20, 5);
 		gluDeleteQuadric(bodybottomcylinder);
+	glPopMatrix();
+
+	glPushMatrix();
+		glRotatef(90, 1, 0, 0);
+		glTranslatef(0.0f, 0.0f, 5.7f);
+
+		GLUquadricObj* bodybottomcylinderline = NULL;
+		bodybottomcylinderline = gluNewQuadric();
+		glColor3f(0, 0, 0);
+		//gluQuadricTexture(cylinder, TRUE);
+		gluQuadricDrawStyle(bodybottomcylinderline, GLU_LINE);
+		gluCylinder(bodybottomcylinderline, 3.0, 2.5, 1.0, 20, 1);
+		gluDeleteQuadric(bodybottomcylinderline);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -1745,7 +1773,7 @@ void body_bottom()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, 6.7f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.3, 0.3, 1.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(bodybottomx1, bodybottomy1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(bodybottomx1 + (bottomradius * cos(i * twopi / triangleAmount)), bodybottomy1 + (bottomradius * sin(i * twopi / triangleAmount)));
@@ -2495,10 +2523,10 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 
 		//Head rotate sound---------------------
 		if (rotatehead == 46) {
-			PlaySound("R2D2a.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/R2D2a.wav", NULL, SND_ASYNC);
 		}
 		else if (rotatehead == -46){
-			PlaySound("R2D2c.wav", NULL, SND_ASYNC);
+			PlaySound("Sounds/R2D2c.wav", NULL, SND_ASYNC);
 		}
 		//--------------------------------------
 

@@ -46,6 +46,7 @@ int activatelighter = 0;
 int activatelighter2 = 0;
 int activatelightsaberchamber = 0;
 int activatelightsaber = 0;
+int activatedeathstarplan = 0;
 
 GLuint texture = 0;
 BITMAP BMP;
@@ -192,6 +193,15 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		{
 			activatelightsaber = 2;
 			PlaySound("Sounds/LightSaberDOWN.wav", NULL, SND_ASYNC);
+		}
+		else if (wParam == VK_INSERT)
+		{
+			activatedeathstarplan = 0;
+		}
+		else if (wParam == VK_DELETE)
+		{
+			activatedeathstarplan = 1;
+			PlaySound("Sounds/NOMOON.wav", NULL, SND_ASYNC);
 		}
 		break;
 
@@ -549,48 +559,62 @@ void rectangle_6()
 //(6 polygon)
 void rectangle_7(float h)
 {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "bluetexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 	glBegin(GL_QUADS);
 	//top
-	glVertex3f(-0.5f, 1.0f, -0.4f);
-	glVertex3f(-0.5f, 1.0f, 0.4f);
-	glVertex3f(0.5f, 1.0f, 0.4f);
-	glVertex3f(0.5f, 1.0f, -0.4f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 1.0f, -0.4f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 1.0f, 0.4f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 1.0f, 0.4f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, 1.0f, -0.4f);
 
 	//back
 	//glColor3f(1, 0, 0);
-	glVertex3f(0.5f, 1.0f, -0.4f);
-	glVertex3f(-0.5f, 1.0f, -0.4f);
-	glVertex3f(-0.5f, 0.0f - h, -0.4f);
-	glVertex3f(0.5f, 0.0f - h, -0.4f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, 1.0f, -0.4f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 1.0f, -0.4f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.0f - h, -0.4f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.0f - h, -0.4f);
 
 	//right
 	//glColor3f(0, 1, 0);
-	glVertex3f(0.5f, 0.0f - h, -0.4f);
-	glVertex3f(0.5f, 1.0f, -0.4f);
-	glVertex3f(0.5f, 1.0f, 0.4f);
-	glVertex3f(0.5f, 0.0f - h, 0.4f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.0f - h, -0.4f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, 1.0f, -0.4f);
+	glTexCoord2f(0, 0); glVertex3f(0.5f, 1.0f, 0.4f);
+	glTexCoord2f(0, 1); glVertex3f(0.5f, 0.0f - h, 0.4f);
 
 	//bottom
 	//glColor3f(0, 0, 1);
-	glVertex3f(0.5f, 0.0f - h, 0.4f);
-	glVertex3f(0.5f, 0.0f - h, -0.4f);
-	glVertex3f(-0.5f, 0.0f - h, -0.4f);
-	glVertex3f(-0.5f, 0.0f - h, 0.4f);
+	glTexCoord2f(0, 1); glVertex3f(0.5f, 0.0f - h, 0.4f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.0f - h, -0.4f);
+	glTexCoord2f(1, 0); glVertex3f(-0.5f, 0.0f - h, -0.4f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 0.0f - h, 0.4f);
 
 	//left
 	//glColor3f(1, 1, 0);
-	glVertex3f(-0.5f, 0.0f - h, 0.4f);
-	glVertex3f(-0.5f, 0.0f - h, -0.4f);
-	glVertex3f(-0.5f, 1.0f, -0.4f);
-	glVertex3f(-0.5f, 1.0f, 0.4f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 0.0f - h, 0.4f);
+	glTexCoord2f(1, 0); glVertex3f(-0.5f, 0.0f - h, -0.4f);
+	glTexCoord2f(1, 1); glVertex3f(-0.5f, 1.0f, -0.4f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 1.0f, 0.4f);
 
 	//front
 	//glColor3f(1, 0, 1);
-	glVertex3f(-0.5f, 1.0f, 0.4f);
-	glVertex3f(0.5f, 1.0f, 0.4f);
-	glVertex3f(0.5f, 0.0f - h, 0.4f);
-	glVertex3f(-0.5f, 0.0f - h, 0.4f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 1.0f, 0.4f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 1.0f, 0.4f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, 0.0f - h, 0.4f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 0.0f - h, 0.4f);
 	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
 }
 
 //(6 polygon)
@@ -727,50 +751,64 @@ void head_eyepiece(float h)
 		glRotatef(30, -1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, 2.15f);
 
-		glColor3f(0.0, 0.0, 1.0);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "bluetexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_QUADS);
 		//top
-		glVertex3f(-0.6f, 1.0f, 0.0f);
-		glVertex3f(-0.6f, 1.0f, 1.0f);
-		glVertex3f(0.6f, 1.0f, 1.0f);
-		glVertex3f(0.6f, 1.0f, 0.0f);
+		glTexCoord2f(0, 0); glVertex3f(-0.6f, 1.0f, 0.0f);
+		glTexCoord2f(0, 1); glVertex3f(-0.6f, 1.0f, 1.0f);
+		glTexCoord2f(1, 1); glVertex3f(0.6f, 1.0f, 1.0f);
+		glTexCoord2f(1, 0); glVertex3f(0.6f, 1.0f, 0.0f);
 
 		//back
 		//glColor3f(1, 0, 0);
-		glVertex3f(0.6f, 1.0f, 0.0f);
-		glVertex3f(-0.6f, 1.0f, 0.0f);
-		glVertex3f(-1.0f, 0.0f - h, 0.0f);
-		glVertex3f(0.6f, 0.0f - h, 0.0f);
+		glTexCoord2f(1, 0); glVertex3f(0.6f, 1.0f, 0.0f);
+		glTexCoord2f(0, 1); glVertex3f(-0.6f, 1.0f, 0.0f);
+		glTexCoord2f(0, 1); glVertex3f(-1.0f, 0.0f - h, 0.0f);
+		glTexCoord2f(1, 1); glVertex3f(0.6f, 0.0f - h, 0.0f);
 
 		//right
 		//glColor3f(0, 1, 0);
-		glVertex3f(0.6f, 0.0f - h, 0.0f);
-		glVertex3f(0.6f, 1.0f, 0.0f);
-		glVertex3f(0.6f, 1.0f, 1.0f);
-		glVertex3f(0.6f, 0.0f - h, 1.0f);
+		glTexCoord2f(1, 1); glVertex3f(0.6f, 0.0f - h, 0.0f);
+		glTexCoord2f(1, 0); glVertex3f(0.6f, 1.0f, 0.0f);
+		glTexCoord2f(0, 0); glVertex3f(0.6f, 1.0f, 1.0f);
+		glTexCoord2f(0, 1); glVertex3f(0.6f, 0.0f - h, 1.0f);
 
 		//bottom
 		//glColor3f(0, 0, 1);
-		glVertex3f(0.6f, 0.0f - h, 1.0f);
-		glVertex3f(0.6f, 0.0f - h, 0.0f);
-		glVertex3f(-1.0f, 0.0f - h, 0.0f);
-		glVertex3f(-1.0f, 0.0f - h, 1.0f);
+		glTexCoord2f(0, 1); glVertex3f(0.6f, 0.0f - h, 1.0f);
+		glTexCoord2f(1, 1); glVertex3f(0.6f, 0.0f - h, 0.0f);
+		glTexCoord2f(1, 0); glVertex3f(-1.0f, 0.0f - h, 0.0f);
+		glTexCoord2f(0, 0); glVertex3f(-1.0f, 0.0f - h, 1.0f);
 
 		//left
 		//glColor3f(1, 1, 0);
-		glVertex3f(-1.0f, 0.0f - h, 1.0f);
-		glVertex3f(-1.0f, 0.0f - h, 0.0f);
-		glVertex3f(-0.6f, 1.0f, 0.0f);
-		glVertex3f(-0.6f, 1.0f, 1.0f);
+		glTexCoord2f(0, 0); glVertex3f(-1.0f, 0.0f - h, 1.0f);
+		glTexCoord2f(1, 0); glVertex3f(-1.0f, 0.0f - h, 0.0f);
+		glTexCoord2f(1, 1); glVertex3f(-0.6f, 1.0f, 0.0f);
+		glTexCoord2f(0, 1); glVertex3f(-0.6f, 1.0f, 1.0f);
 
 		//front
 		//glColor3f(1, 0, 1);
-		glVertex3f(-0.6f, 1.0f, 1.0f);
-		glVertex3f(0.6f, 1.0f, 1.0f);
-		glVertex3f(0.6f, 0.0f - h, 1.0f);
-		glVertex3f(-1.0f, 0.0f - h, 1.0f);
+		glTexCoord2f(0, 0); glVertex3f(-0.6f, 1.0f, 1.0f);
+		glTexCoord2f(1, 1); glVertex3f(0.6f, 1.0f, 1.0f);
+		glTexCoord2f(1, 0); glVertex3f(0.6f, 0.0f - h, 1.0f);
+		glTexCoord2f(0, 0); glVertex3f(-1.0f, 0.0f - h, 1.0f);
 		glEnd();
 	glPopMatrix();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
 }
 
 void head_eyesphere()
@@ -1926,7 +1964,6 @@ void left_leg()
 
 	glPushMatrix();
 		glTranslatef(-4.0f, -3.0f, 0.0f);
-		glColor3f(0, 0.5, 1);
 		rectangle_7(2.5);
 	glPopMatrix();
 
@@ -2088,7 +2125,6 @@ void right_leg()
 
 	glPushMatrix();
 		glTranslatef(4.0f, -3.0f, 0.0f);
-		glColor3f(0, 0.5, 1);
 		rectangle_7(2.5);
 	glPopMatrix();
 
@@ -2223,6 +2259,34 @@ void center_leg()
 }
 //-----------------------------
 
+//----------------------------deathstar plan
+void display_deathstarplan()
+{
+	glPushMatrix();
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "deathstarplan.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+			glTexCoord2f(1, 1); glVertex3f(-10, 6, 10);
+			glTexCoord2f(0, 1); glVertex3f(10, 6, 10);
+			glTexCoord2f(0, 0); glVertex3f(10, -6, 10);
+			glTexCoord2f(1, 0); glVertex3f(-10, -6, 10);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+}
+//----------------------------
 
 void display()
 {
@@ -2244,6 +2308,11 @@ void display()
 				glRotatef(-bodyrotate, 1.0f, 0.0f, 0.0f);
 				glTranslatef(0.0f, 1.0f, 0.0f);
 
+				if (activatedeathstarplan == 1)
+				{
+					display_deathstarplan();
+				}
+				
 				glPushMatrix();
 					glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 					head_combined();

@@ -1,4 +1,3 @@
-
 #include <Windows.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
@@ -41,8 +40,9 @@ int triangleAmount = 400;
 GLfloat twopi = 2.0f * 3.14159265359;
 int lightersound = 0;
 
-boolean activategun = false;
-boolean rotategun = false;
+int gunactive = 0;
+int activategun = 0;
+int rotategun = 0;
 int activateleg = 0;
 int activatebodyrotate = 0;
 int activatethruster = 0;
@@ -104,25 +104,11 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		else if (wParam == 'N')
 		{
-			if (activategun == true)
-			{
-				activategun = false;
-			}
-			else
-			{
-				activategun = true;
-			}
+			activategun = 1;
 		}
 		else if (wParam == 'M')
 		{
-			if (rotategun == true)
-			{
-				rotategun = false;
-			}
-			else
-			{
-				rotategun = true;
-			}
+			activategun = 2;
 		}
 		else if (wParam == 'Z')
 		{
@@ -2071,49 +2057,64 @@ void lighterhead()
 {
 	glPushMatrix();
 		glTranslatef(1.3f, -0.5f, 2.1f);
-		glColor3f(1, 0, 0);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "silvertexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		glColor3f(1, 1, 1);
 		glBegin(GL_QUADS);
 			//top
-			glVertex3f(-0.3f, 0.2f, -0.1f);
-			glVertex3f(-0.3f, 0.2f, 0.1f);
-			glVertex3f(0.3f, 0.2f, 0.1f);
-			glVertex3f(0.3f, 0.2f, -0.1f);
+			glTexCoord2f(0, 0); glVertex3f(-0.3f, 0.2f, -0.1f);
+			glTexCoord2f(0, 1); glVertex3f(-0.3f, 0.2f, 0.1f);
+			glTexCoord2f(1, 1); glVertex3f(0.3f, 0.2f, 0.1f);
+			glTexCoord2f(1, 0); glVertex3f(0.3f, 0.2f, -0.1f);
 
 			//back
 			//glColor3f(1, 0, 0);
-			glVertex3f(0.3f, 0.2f, -0.1f);
-			glVertex3f(-0.3f, 0.2f, -0.1f);
-			glVertex3f(-0.3f, 0.0f, -0.1f);
-			glVertex3f(0.3f, 0.0f, -0.1f);
+			glTexCoord2f(1, 0); glVertex3f(0.3f, 0.2f, -0.1f);
+			glTexCoord2f(0, 0); glVertex3f(-0.3f, 0.2f, -0.1f);
+			glTexCoord2f(0, 1); glVertex3f(-0.3f, 0.0f, -0.1f);
+			glTexCoord2f(1, 1); glVertex3f(0.3f, 0.0f, -0.1f);
 
 			//right
 			//glColor3f(0, 1, 0);
-			glVertex3f(0.3f, 0.0f, -0.1f);
-			glVertex3f(0.3f, 0.2f, -0.1f);
-			glVertex3f(0.3f, 0.2f, 0.1f);
-			glVertex3f(0.3f, 0.0f, 0.1f);
+			glTexCoord2f(1, 1); glVertex3f(0.3f, 0.0f, -0.1f);
+			glTexCoord2f(1, 0); glVertex3f(0.3f, 0.2f, -0.1f);
+			glTexCoord2f(0, 0); glVertex3f(0.3f, 0.2f, 0.1f);
+			glTexCoord2f(0, 1); glVertex3f(0.3f, 0.0f, 0.1f);
 
 			//bottom
 			//glColor3f(0, 0, 1);
-			glVertex3f(0.3f, 0.0f, 0.1f);
-			glVertex3f(0.3f, 0.0f, -0.1f);
-			glVertex3f(-0.3f, 0.0f, -0.1f);
-			glVertex3f(-0.3f, 0.0f, 0.1f);
+			glTexCoord2f(0, 1); glVertex3f(0.3f, 0.0f, 0.1f);
+			glTexCoord2f(1, 1); glVertex3f(0.3f, 0.0f, -0.1f);
+			glTexCoord2f(1, 0); glVertex3f(-0.3f, 0.0f, -0.1f);
+			glTexCoord2f(0, 0); glVertex3f(-0.3f, 0.0f, 0.1f);
 
 			//left
 			//glColor3f(1, 1, 0);
-			glVertex3f(-0.3f, 0.0f, 0.1f);
-			glVertex3f(-0.3f, 0.0f, -0.1f);
-			glVertex3f(-0.3f, 0.2f, -0.1f);
-			glVertex3f(-0.3f, 0.2f, 0.1f);
+			glTexCoord2f(0, 0); glVertex3f(-0.3f, 0.0f, 0.1f);
+			glTexCoord2f(1, 0); glVertex3f(-0.3f, 0.0f, -0.1f);
+			glTexCoord2f(1, 1); glVertex3f(-0.3f, 0.2f, -0.1f);
+			glTexCoord2f(0, 1); glVertex3f(-0.3f, 0.2f, 0.1f);
 
 			//front
 			//glColor3f(1, 0, 1);
-			glVertex3f(-0.3f, 0.2f, 0.1f);
-			glVertex3f(0.3f, 0.2f, 0.1f);
-			glVertex3f(0.3f, 0.0f, 0.1f);
-			glVertex3f(-0.3f, 0.0f, 0.1f);
+			glTexCoord2f(0, 1); glVertex3f(-0.3f, 0.2f, 0.1f);
+			glTexCoord2f(1, 1); glVertex3f(0.3f, 0.2f, 0.1f);
+			glTexCoord2f(1, 0); glVertex3f(0.3f, 0.0f, 0.1f);
+			glTexCoord2f(0, 0); glVertex3f(-0.3f, 0.0f, 0.1f);
 		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 
@@ -3746,7 +3747,7 @@ void display()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 		glPushMatrix();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 			glTranslatef(movex, movey, movez);
 			glRotatef(rotater2, 0.0f, 1.0f, 0.0f);
@@ -3916,42 +3917,47 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		}
 
 		//gattinggun movement------------------
-		if (activategun == true)
+		if (activategun == 1) 
 		{
-			if (gunmove < 3.5f)
-			{
-				gunmove += 0.1;
-			}
+			gunmove += 0.1;
+		}
+		else if (activategun == 2)
+		{
+			rotategun = 2;
+			gunmove -= 0.1;
 		}
 
-		if (activategun == false)
+		if (gunmove >= 3.5)
 		{
-			if (rotategun == false)
-			{
-				if (gunmove > (-5.0f))
-				{
-					gunmove -= 0.1;
-				}
-			}
+			gunmove = 3.5;
+			activategun = 0;
+			rotategun = 1;
+		}
+		else if (gunmove <= (-5.0))
+		{
+			gunmove = -5.0;
+			activategun = 0;
 		}
 
-		if (rotategun == true)
+		if (rotategun == 1)
 		{
-			if (activategun == true)
-			{
-				if (gunrotate < 360.0f)
-				{
-					gunrotate += 1.0f;
-				}
-			}
+			gunrotate += 2;
+		}
+		else if (rotategun == 2)
+		{
+			gunrotate -= 4;
 		}
 
-		if (rotategun == false)
+		if (gunrotate >= 360)
 		{
-			if (gunrotate > 270.0f)
-			{
-				gunrotate -= 1.0f;
-			}
+			gunrotate = 360;
+			rotategun = 0;
+		}
+		else if (gunrotate <= 271)
+		{
+			gunrotate = 270;
+			rotategun = 0;
+			//activategun = 2;
 		}
 		//--------------------------------------
 

@@ -4093,25 +4093,25 @@ void robot()
 
 	glPopMatrix();
 
-	//Show direction
-	glPushMatrix();
-	// draw our axes
-	glBegin(GL_LINES);
-		// draw line for x axis
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(10.0, 0.0, 0.0);
-		// draw line for y axis
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(0.0, 10.0, 0.0);
-		// draw line for Z axis
-		glColor3f(0.0, 0.0, 1.0);
-		glVertex3f(0.0, 0.0, 0.0);
-		glVertex3f(0.0, 0.0, 10.0);
-		glEnd();
-		// load the previous matrix
-	glPopMatrix();
+	////Show direction
+	//glPushMatrix();
+	//// draw our axes
+	//glBegin(GL_LINES);
+	//	// draw line for x axis
+	//	glColor3f(1.0, 0.0, 0.0);
+	//	glVertex3f(0.0, 0.0, 0.0);
+	//	glVertex3f(10.0, 0.0, 0.0);
+	//	// draw line for y axis
+	//	glColor3f(0.0, 1.0, 0.0);
+	//	glVertex3f(0.0, 0.0, 0.0);
+	//	glVertex3f(0.0, 10.0, 0.0);
+	//	// draw line for Z axis
+	//	glColor3f(0.0, 0.0, 1.0);
+	//	glVertex3f(0.0, 0.0, 0.0);
+	//	glVertex3f(0.0, 0.0, 10.0);
+	//	glEnd();
+	//	// load the previous matrix
+	//glPopMatrix();
 
 	glFlush();
 }
@@ -4151,8 +4151,17 @@ void displayrobotwithlighting()
 		glDisable(GL_LIGHT0);
 	}
 
+	if (selectOrtho == true)
+	{
+		background(50.0f);
+	}
+
+	if (selectPerspective == true)
+	{
+		background2(50.0f);
+	}
+
 	robot();
-	background(40.0f);
 }
 //--------------------------------------------------------------------
 
@@ -4211,14 +4220,13 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(-orthoxd, orthoxd, -orthoxd, orthoxd, -30, 100);
-
 		}
 
 		if (selectPerspective == true) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			//glScalef(0.5, 0.5, 0.5);
-			gluPerspective(100.0, 1.0, 1, 100);
+			gluPerspective(100.0, 1.0, 1, 120);
 			//glFrustum(-10, 10, -10, 10, 10, 100);
 			glTranslatef(0.0f, 0.0f, -12.0f);
 		}

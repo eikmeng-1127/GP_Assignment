@@ -39,6 +39,7 @@ GLfloat rotater2 = 0;
 
 int triangleAmount = 400;
 GLfloat twopi = 2.0f * 3.14159265359;
+int lightersound = 0;
 
 boolean activategun = false;
 boolean rotategun = false;
@@ -56,6 +57,7 @@ int activatesaw = 0;
 int activatearm = 0;
 int activatehand = 0;
 int activatethrustergo = 0;
+int activatelighterfire = 0;
 boolean selectOrtho = true;
 boolean selectPerspective = false;
 
@@ -1445,6 +1447,20 @@ void thrustercylinder()
 	glDisable(GL_TEXTURE_2D);
 	DeleteObject(hBMP);
 	glDeleteTextures(1, &texture);
+
+	glPushMatrix();
+		GLfloat leftx1 = 0.0;
+		GLfloat lefty1 = 0.0;
+		GLfloat radius1 = 0.2;
+
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(leftx1, lefty1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(leftx1 + (radius1 * cos(i * twopi / triangleAmount)), lefty1 + (radius1 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
 }
 
 void thrustercone() 
@@ -2098,6 +2114,62 @@ void lighterhead()
 			glVertex3f(0.3f, 0.0f, 0.1f);
 			glVertex3f(-0.3f, 0.0f, 0.1f);
 		glEnd();
+	glPopMatrix();
+}
+
+void lighterfire()
+{
+	glPushMatrix();
+		glTranslatef(0.97f, -0.4f, 2.1f);
+	
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "firetexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* lighterfiresphere = NULL;
+		lighterfiresphere = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lighterfiresphere, TRUE);
+		gluQuadricDrawStyle(lighterfiresphere, GLU_FILL);
+		gluSphere(lighterfiresphere, 0.1, 30, 30);
+		gluDeleteQuadric(lighterfiresphere);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(0.95f, -0.4f, 2.1f);
+		glRotatef(270, 0.0f, 1.0f, 0.0f);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "firetexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* lighterfirecylinder = NULL;
+		lighterfirecylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lighterfirecylinder, TRUE);
+		gluQuadricDrawStyle(lighterfirecylinder, GLU_FILL);
+		gluCylinder(lighterfirecylinder, 0.1, 0.0, 0.5, 20, 5);
+		gluDeleteQuadric(lighterfirecylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 //-----------------------------
@@ -3071,6 +3143,11 @@ void lighter_combined()
 			glRotatef(-rotatelighter2, 0.0f, 0.0f, 1.0f);
 			glTranslatef(-1.5f, 0.5f, -2.0f);
 			lighterhead();
+			if (activatelighterfire == 1) {
+				glPushMatrix();
+					lighterfire();
+				glPopMatrix();
+			}
 		glPopMatrix();
 	glPopMatrix();
 }
@@ -4010,13 +4087,16 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		}
 		else if (activatelighter2 == 2)
 		{
+			activatelighterfire = 0;
 			rotatelighter2 -= 2;
+			lightersound = 0;
 		}
 
 		if (rotatelighter >= 90)
 		{
 			rotatelighter = 90;
 			activatelighter = 0;
+			activatelighterfire = 1;
 		}
 		else if (rotatelighter <= 0.1)
 		{
@@ -4033,6 +4113,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		{
 			rotatelighter2 = 0;
 			activatelighter2 = 0;
+		}
+		
+		if (activatelighterfire == 1 && lightersound == 0)
+		{
+			PlaySound("Sounds/lighterflicksound.wav", NULL, SND_ASYNC);
+			lightersound = 1;
 		}
 		//--------------------------------------
 

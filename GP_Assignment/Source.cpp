@@ -1967,9 +1967,9 @@ void gg_barrels() {
 	glPushMatrix();
 		glRotatef(shootgun, 0.0f, 0.0f, 1.0f);
 		glPushMatrix();
-			gg_mainbarrel();
-			gg_sidebarrels();
-			gg_barrelholder();
+			gg_mainbarrel(); // 2 polygon
+			gg_sidebarrels(); // 12 polygon
+			gg_barrelholder(); // 1 polygon
 		glPopMatrix();
 	glPopMatrix();
 }
@@ -2091,10 +2091,10 @@ void gatlingGun() {
 	glPushMatrix();
 		glTranslatef(0.0f, gunmove, 0.0f);
 		glRotatef(gunrotate, 1.0, 0.0, 0.0);
-		gg_barrels();
-		gg_body();
-		gg_connnector();
-		gg_head();
+		gg_barrels(); // 15 polygon
+		gg_body(); // 3 polygon
+		gg_connnector(); // 1 polygon
+		gg_head(); // 1 polygon
 	glPopMatrix();
 }
 //-----------------------------
@@ -2969,11 +2969,11 @@ void lightsaber_centergrip2()
 void lightsaber_combined()
 {
 	glPushMatrix();
-		lightsaber_main();
-		lightsaber_grip();
-		lightsaber_centergrip();
-		lightsaber_centergrip2();
-		lightsaber_cap();
+		lightsaber_main(); // 1 polygon
+		lightsaber_grip(); // 3 polygon
+		lightsaber_centergrip(); // 3 polygon
+		lightsaber_centergrip2(); // 3 polygon
+		lightsaber_cap(); // 2 polygon
 	glPopMatrix();
 }
 //-----------------------------
@@ -2984,9 +2984,9 @@ void head_combined()
 {
 	glPushMatrix();
 		glPushMatrix();
-			head_sphere();
-			head_eyesphere();
-			head_eyepiece(0.0);
+			head_sphere(); // 1 polygon
+			head_eyesphere(); // 1 polygon
+			head_eyepiece(0.0); // 6 polygon
 
 			glPushMatrix();
 				glTranslatef(-0.75f, 0.4f, 2.7f);
@@ -2994,7 +2994,7 @@ void head_combined()
 				glPushMatrix();
 					glRotatef(-10, 1.0f, 0.0f, 0.0f);
 					glPushMatrix();
-						head_rectangle2();
+						head_rectangle2(); // 6 polygon
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
@@ -3004,11 +3004,11 @@ void head_combined()
 				glPushMatrix();
 				glRotatef(-10, 1.0f, 0.0f, 0.0f);
 					glPushMatrix();
-						head_rectangle();
+						head_rectangle(); // 6 polygon
 						glPushMatrix();
 							glTranslatef(0.1f, 0.4f, 0.2f);
 							glColor3f(1, 0, 0);
-							head_colourchangingsphere();
+							head_colourchangingsphere(); // 1 polygon
 						glPopMatrix();
 					glPopMatrix();
 				glPopMatrix();
@@ -3021,11 +3021,11 @@ void head_combined()
 					glPushMatrix();
 					glRotatef(-10, 1.0f, 0.0f, 0.0f);
 						glPushMatrix();
-							head_rectangle();
+							head_rectangle(); // 6 polygon
 							glPushMatrix();
 								glTranslatef(0.1f, 0.4f, 0.2f);
 								glColor3f(1, 1, 0);
-								head_colourchangingsphere();
+								head_colourchangingsphere(); // 1 polygon
 							glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
@@ -3038,8 +3038,8 @@ void head_combined()
 				glRotatef(-10, 1.0f, 0.0f, 0.0f);
 					glPushMatrix();
 					glRotatef(15, 0.0f, 1.0f, 0.0f);
-						head_eyecylinder1();
-						head_eyecone();
+						head_eyecylinder1(); // 2 polygon
+						head_eyecone(); // 2 polygon
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
@@ -3050,8 +3050,8 @@ void head_combined()
 					glRotatef(-10, 1.0f, 0.0f, 0.0f);
 					glPushMatrix();
 						glRotatef(15, 0.0f, 1.0f, 0.0f);
-						head_eyecylinder1();
-						head_eyecone();
+						head_eyecylinder1(); // 2 polygon
+						head_eyecone(); // 2 polygon
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
@@ -3060,7 +3060,7 @@ void head_combined()
 				glPushMatrix();
 					glRotatef(90, 1.0f, 0.0f, 0.0f);
 					glTranslatef(0.0f, -1.3f, -1.0f);
-					head_secondeyecylinder();
+					head_secondeyecylinder(); // 1 polygon
 				glPopMatrix();
 				glPushMatrix();
 					glTranslatef(0.0f, -1.3f, -1.3f);
@@ -3068,11 +3068,11 @@ void head_combined()
 					glTranslatef(0.0f, 1.3f, 1.3f);
 					glPushMatrix();
 						glTranslatef(0.0f, 1.0f, -1.3f);
-						head_secondeyequad();
+						head_secondeyequad(); // 6 polygon
 					glPopMatrix();
 					glPushMatrix();
 						glTranslatef(0.0f, 1.7f, -0.85f);
-						head_secondeyesphere();
+						head_secondeyesphere(); // 1 polygon
 					glPopMatrix();
 				glPopMatrix();
 			glPopMatrix();
@@ -3080,12 +3080,12 @@ void head_combined()
 				glTranslatef(0.8f, lschambermove, 0.8f);
 				glPushMatrix();
 					glRotatef(225, 0.0f, 1.0f, 0.0f);
-					head_lightsaberchamber();
+					head_lightsaberchamber(); // 6 polygon
 				glPopMatrix();
 			glPopMatrix();
 			glPushMatrix();
 			glTranslatef(0.8f, lsmove, 0.8f);
-				lightsaber_combined();
+				lightsaber_combined(); // 12 polygon
 			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
@@ -3177,17 +3177,17 @@ void backthruster_combined()
 	glTranslatef(0.0f, 0.0f, -(backthrustermove));
 		glPushMatrix();
 		glTranslatef(0.0f, -1.5f, -0.0f);
-			backpackthruster(2.0);
+			backpackthruster(2.0); // 6 polygon
 		glPopMatrix();
 		glPushMatrix();
 			glRotatef(90, 1.0f, 0.0f, 0.0f);
 			glTranslatef(0.8f, -0.3f, 3.5f);
-			backpackthrustercone();
+			backpackthrustercone(); // 1 polygon
 		glPopMatrix();
 		glPushMatrix();
 			glRotatef(90, 1.0f, 0.0f, 0.0f);
 			glTranslatef(-0.8f, -0.3f, 3.5f);
-			backpackthrustercone();
+			backpackthrustercone(); //1 polygon
 		glPopMatrix();
 
 		if ((activatethrustergo == 1 || activatethrustergo == 2) && movey != 0)
@@ -3195,12 +3195,12 @@ void backthruster_combined()
 			glPushMatrix();
 				glRotatef(90, 1.0f, 0.0f, 0.0f);
 				glTranslatef(0.8f, -0.3f, 3.5f);
-				backpackthrusterfire();
+				backpackthrusterfire(); // 1 polygon
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef(90, 1.0f, 0.0f, 0.0f);
 				glTranslatef(-0.8f, -0.3f, 3.5f);
-				backpackthrusterfire();
+				backpackthrusterfire(); // 1 polygon
 			glPopMatrix();
 		}
 		
@@ -3214,16 +3214,16 @@ void lighter_combined()
 		glRotatef(-rotatelighter, 0.0f, 1.0f, 0.0f);
 		glTranslatef(1.5f, 0.5f, -2.0f);
 		glPushMatrix();
-				lightercylinder();
+			lightercylinder(); // 1 polygon
 		glPopMatrix();
 		glPushMatrix();
 			glTranslatef(1.5f, -0.5f, 2.0f);
 			glRotatef(-rotatelighter2, 0.0f, 0.0f, 1.0f);
 			glTranslatef(-1.5f, 0.5f, -2.0f);
-			lighterhead();
+			lighterhead(); // 6 polygon
 			if (activatelighterfire == 1) {
 				glPushMatrix();
-					lighterfire();
+					lighterfire(); // 2 polygon
 				glPopMatrix();
 			}
 		glPopMatrix();
@@ -3237,11 +3237,11 @@ void saw_combined()
 		glPushMatrix();
 		glTranslatef(1.4f, -3.1f, -1.0f);
 			glPushMatrix();
-				sawcylinder();
+				sawcylinder(); // 1 polygon
 			glPopMatrix();
 			glPushMatrix();
 			glRotatef(sawrotate, 0.0f, 0.0f, 1.0f);
-				saw_head();
+				saw_head(); // 9 polygon
 			glPopMatrix();
 		glPopMatrix();
 	glPopMatrix();
@@ -3253,21 +3253,13 @@ void arm_combined()
 	glTranslatef(2.4f, -1.0f, 0.80f);
 	glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glPushMatrix();
-			glPushMatrix();
-				glPointSize(6);
-				glColor3f(1, 1, 0);
-				glBegin(GL_POINTS);
-				glVertex3f(0.0f, 0.0f, 0.0f);
-				glEnd();
-			glPopMatrix();
 			glRotatef(-armmove, 1.0f, 0.0f, 0.0f);
 			glPushMatrix();
-				armcylinder();
+				armcylinder(); // 1
 			glPopMatrix();
 			glPushMatrix();
 				glRotatef(armrotate, 0.0f, 0.0f, 1.0f);
-				armhand();
-
+				armhand(); // 1
 				glPushMatrix();
 					glTranslatef(0.0f, 0.0f, 3.2f);
 					glRotatef(-(handmove), 0.0f, 1.0f, 0.0f);
@@ -3275,10 +3267,10 @@ void arm_combined()
 					glPushMatrix();
 						glTranslatef(0.0f, -0.3f, 3.0f);
 						glPushMatrix();
-							armquad();
+							armquad(); // 6 
 							glPushMatrix();
 								glTranslatef(0.0f, 0.0f, 0.6f);
-								armquad2();
+								armquad2(); // 6
 							glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
@@ -3291,10 +3283,10 @@ void arm_combined()
 					glPushMatrix();
 						glTranslatef(0.0f, -0.3f, 3.0f);
 						glPushMatrix();
-							armquad3();
+							armquad3(); // 6
 							glPushMatrix();
 								glTranslatef(0.0f, 0.0f, 0.6f);
-								armquad4();
+								armquad4(); // 6
 							glPopMatrix();
 						glPopMatrix();
 					glPopMatrix();
@@ -3435,20 +3427,20 @@ void left_leg()
 		glPushMatrix();
 			glRotatef(90.0, 1.0f, 0.0f, 0.0f);
 			glTranslatef(-4.1f, 0.0f, 2.7f);
-			thrustercylinder();
+			thrustercylinder(); // 2 
 		glPopMatrix();
 		glPushMatrix();
 			glRotatef(90.0, 1.0f, 0.0f, 0.0f);
 			glTranslatef(-4.1f, 0.0f, 4.2f);
-			thrustercone();
+			thrustercone(); // 1
 		glPopMatrix();
 		glPushMatrix();
 			glTranslatef(-3.6f, -3.1f, 0.0f);
-			thrusterjoint1();
+			thrusterjoint1(); // 6
 		glPopMatrix();
 		glPushMatrix();
 			glTranslatef(-3.6f, -3.7f, 0.0f);
-			thrusterjoint2();
+			thrusterjoint2(); // 6
 		glPopMatrix();
 
 		if ((activatethrustergo == 1 || activatethrustergo == 2) && movey != 0)
@@ -3456,7 +3448,7 @@ void left_leg()
 			glPushMatrix();
 				glRotatef(90, 1.0f, 0.0f, 0.0f);
 				glTranslatef(-4.1f, 0.0f, 4.3f);
-				thrusterfire();
+				thrusterfire(); //1
 			glPopMatrix();
 		}
 	glPopMatrix();
@@ -3715,13 +3707,13 @@ void center_leg()
 	glPushMatrix();
 		glTranslatef(0.0f, -8.0f, 0.0f);
 		glColor3f(1, 1, 1);
-		quadforcenterleg();
+		quadforcenterleg(); // 6
 	glPopMatrix();
 
 	glPushMatrix();
 		glTranslatef(0.0f, -9.5f, 0.0f);
 		glColor3f(1, 1, 1);
-		quadforcenterleg_2();
+		quadforcenterleg_2(); // 6
 	glPopMatrix();
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
@@ -4035,32 +4027,32 @@ void robot()
 				
 				glPushMatrix();
 					glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
-					head_combined();
-					gatlingGun();
+					head_combined(); // 62 polygon
+					gatlingGun(); // 20 polygon
 					if (activatedeathstarplan == 1)
 					{
-						display_deathstarplan();
+						display_deathstarplan(); // 1 polygon
 					}
 				glPopMatrix();
 
-				body_cylinder();
-				body_bottom();
-				backthruster_combined();
-				lighter_combined();
-				saw_combined();
-				arm_combined();
+				body_cylinder(); // 1 polygon
+				body_bottom(); // 2 polygon
+				backthruster_combined(); // 10 polygon
+				lighter_combined(); // 9 polygon
+				saw_combined(); // 10 polygon
+				arm_combined(); // 26 polygon
 			
 				glPushMatrix();
 
 					glTranslatef(0.0f, legmove, 0.0f);
 
-					center_leg_connector();
+					center_leg_connector(); // 1 polygon
 
 					glPushMatrix();
 						glTranslatef(0.0f, -8.0f, 0.0f);
-						glRotatef(bodyrotate, 1.0f, 0.0f, 0.0f); //mmax 25
+						glRotatef(bodyrotate, 1.0f, 0.0f, 0.0f);
 						glTranslatef(0.0f, 8.0f, 0.0f);
-						center_leg();
+						center_leg(); // 15 polygon
 					glPopMatrix();
 
 				glPopMatrix();
@@ -4072,19 +4064,19 @@ void robot()
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 				glPushMatrix();
-					join_cylinderleft();
+					join_cylinderleft(); // 1 polygon
 				glPopMatrix();
 
 				glPushMatrix();
-					left_leg();
+					left_leg(); // 64 polygon
 				glPopMatrix();
 
 				glPushMatrix();
-					join_cylinderright();
+					join_cylinderright(); // 1 polygon
 				glPopMatrix();
 
 				glPushMatrix();
-					right_leg();
+					right_leg(); // 64 polygon
 				glPopMatrix();
 
 			glPopMatrix();

@@ -58,6 +58,8 @@ int activatearm = 0;
 int activatehand = 0;
 int activatethrustergo = 0;
 int activatelighterfire = 0;
+int lightswitch = 0;
+int activatelight = 0;
 boolean selectOrtho = true;
 boolean selectPerspective = false;
 
@@ -70,6 +72,9 @@ const char* temp = "";
 GLuint texture = 0;
 BITMAP BMP;
 HBITMAP hBMP = NULL;
+
+GLfloat dif[] = {1.0, 1.0, 1.0};
+GLfloat pos[] = { 0.3, 0.5, 0.5 };
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -282,6 +287,26 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == VK_NEXT)
 		{
 			activatethrustergo = 2;
+		}
+		else if (wParam == VK_F2)
+		{
+			if (lightswitch == 0)
+			{
+				lightswitch = 1;
+			}
+			else {
+				lightswitch = 0;
+			}
+		}
+		else if (wParam == VK_F3)
+		{
+			if (activatelight == 0)
+			{
+				activatelight = 1;
+			}
+			else {
+				activatelight - 0;
+			}
 		}
 		break;
 
@@ -3738,16 +3763,13 @@ void display_deathstarplan()
 }
 //----------------------------
 
-void display()
+void robot()
 {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
-
 	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	glPushMatrix();
 		glPushMatrix();
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 			glTranslatef(movex, movey, movez);
 			glRotatef(rotater2, 0.0f, 1.0f, 0.0f);
@@ -3838,6 +3860,34 @@ void display()
 		// load the previous matrix
 	glPopMatrix();
 
+	glFlush();
+}
+
+void displayrobot()
+{
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	robot();
+}
+
+void displayrobotwithlighting()
+{
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_LIGHTING);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT0, GL_POSITION, pos);
+	glEnable(GL_LIGHT0);
+
+	if (lightswitch == 1) {
+		glDisable(GL_LIGHT0);
+	}
+
+	robot();
 }
 //--------------------------------------------------------------------
 
@@ -4256,7 +4306,14 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		}
 		//--------------------------------------
 
-		display();
+		if (activatelight == 0)
+		{
+			displayrobot();
+		}
+		else if (activatelight == 1)
+		{
+			displayrobotwithlighting();
+		}
 
 		SwapBuffers(hdc);
 	}

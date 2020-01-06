@@ -39,6 +39,7 @@ GLfloat rotater2 = 0;
 int triangleAmount = 400;
 GLfloat twopi = 2.0f * 3.14159265359;
 int lightersound = 0;
+int start = 0;
 
 int gunactive = 0;
 int activategun = 0;
@@ -74,7 +75,7 @@ BITMAP BMP;
 HBITMAP hBMP = NULL;
 
 GLfloat dif[] = {1.0, 1.0, 1.0};
-GLfloat pos[] = { 0.3, 0.5, 0.5 };
+GLfloat pos[] = { 0.0, 0.0, 0.0 };
 
 LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -86,7 +87,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 	case WM_KEYDOWN:
 		if (wParam == VK_ESCAPE)
+		{
 			PostQuitMessage(0);
+		}
 		else if (wParam == VK_SPACE)
 		{
 			glLoadIdentity();
@@ -307,6 +310,30 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			else {
 				activatelight - 0;
 			}
+		}
+		else if (wParam == VK_NUMPAD7)
+		{
+			pos[0] += 0.1;
+		}
+		else if (wParam == VK_NUMPAD8)
+		{
+			pos[0] -= 0.1;
+		}
+		else if (wParam == VK_NUMPAD4)
+		{
+			pos[1] += 0.1;
+		}
+		else if (wParam == VK_NUMPAD5)
+		{
+			pos[1] -= 0.1;
+		}
+		else if (wParam == VK_NUMPAD1)
+		{
+			pos[2] += 0.1;
+		}
+		else if (wParam == VK_NUMPAD2)
+		{
+			pos[2] -= 0.1;
 		}
 		break;
 
@@ -3766,7 +3793,6 @@ void display_deathstarplan()
 void robot()
 {
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	glPushMatrix();
 		glPushMatrix();
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -3877,9 +3903,10 @@ void displayrobotwithlighting()
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);
 
 	glEnable(GL_LIGHTING);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
+	glLightfv(GL_LIGHT0, GL_AMBIENT_AND_DIFFUSE, dif);
 	glLightfv(GL_LIGHT0, GL_POSITION, pos);
 	glEnable(GL_LIGHT0);
 
@@ -4305,6 +4332,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			activatethrustergo = 0;
 		}
 		//--------------------------------------
+
+		if (start == 0) {
+			PlaySound("Sounds/Determined_R2D2.wav", NULL, SND_ASYNC);
+			start = 1;
+		}
 
 		if (activatelight == 0)
 		{

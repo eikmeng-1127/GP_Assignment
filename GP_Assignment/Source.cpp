@@ -55,6 +55,7 @@ int activatedeathstarplan = 0;
 int activatesaw = 0;
 int activatearm = 0;
 int activatehand = 0;
+int activatethrustergo = 0;
 boolean selectOrtho = true;
 boolean selectPerspective = false;
 
@@ -219,7 +220,6 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			activatedeathstarplan = 1;
 			PlaySound("Sounds/NOMOON.wav", NULL, SND_ASYNC);
 		}
-
 		else if (wParam == '1')
 		{
 			selectOrtho = true;
@@ -285,6 +285,15 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		{
 			babyyoda = false;
 			rebel = true;
+		}
+		else if (wParam == VK_PRIOR)
+		{
+			activatethrustergo = 1;
+			PlaySound("Sounds/Rocket_Thrusters.wav", NULL, SND_ASYNC);
+		}
+		else if (wParam == VK_NEXT)
+		{
+			activatethrustergo = 2;
 		}
 		break;
 
@@ -1633,6 +1642,33 @@ void thrusterjoint3()
 	DeleteObject(hBMP);
 	glDeleteTextures(1, &texture);
 }
+
+void thrusterfire()
+{
+	glPushMatrix();
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "firetexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* thrustercone = NULL;
+		thrustercone = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(thrustercone, TRUE);
+		gluQuadricDrawStyle(thrustercone, GLU_FILL);
+		gluCylinder(thrustercone, 0.15, 0, 0.8, 20, 5);
+		gluDeleteQuadric(thrustercone);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+}
 //------------------------------
 
 //----------------------------back thruster
@@ -1706,6 +1742,33 @@ void backpackthrustercone()
 	gluQuadricDrawStyle(backthrustercone, GLU_FILL);
 	gluCylinder(backthrustercone, 0.5, 0.4, 0.3, 20, 5);
 	gluDeleteQuadric(backthrustercone);
+}
+
+void backpackthrusterfire()
+{
+	glPushMatrix();
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "firetexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* thrustercone = NULL;
+		thrustercone = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(thrustercone, TRUE);
+		gluQuadricDrawStyle(thrustercone, GLU_FILL);
+		gluCylinder(thrustercone, 0.4, 0, 1.4, 20, 5);
+		gluDeleteQuadric(thrustercone);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
 }
 //----------------------------
 
@@ -2976,6 +3039,21 @@ void backthruster_combined()
 			glTranslatef(-0.8f, -0.3f, 3.5f);
 			backpackthrustercone();
 		glPopMatrix();
+
+		if ((activatethrustergo == 1 || activatethrustergo == 2) && movey != 0)
+		{
+			glPushMatrix();
+				glRotatef(90, 1.0f, 0.0f, 0.0f);
+				glTranslatef(0.8f, -0.3f, 3.5f);
+				backpackthrusterfire();
+			glPopMatrix();
+			glPushMatrix();
+				glRotatef(90, 1.0f, 0.0f, 0.0f);
+				glTranslatef(-0.8f, -0.3f, 3.5f);
+				backpackthrusterfire();
+			glPopMatrix();
+		}
+		
 	glPopMatrix();
 }
 
@@ -3212,11 +3290,20 @@ void left_leg()
 		glPushMatrix();
 			glTranslatef(-3.6f, -3.1f, 0.0f);
 			thrusterjoint1();
-			glPopMatrix();
+		glPopMatrix();
 		glPushMatrix();
 			glTranslatef(-3.6f, -3.7f, 0.0f);
 			thrusterjoint2();
 		glPopMatrix();
+
+		if ((activatethrustergo == 1 || activatethrustergo == 2) && movey != 0)
+		{
+			glPushMatrix();
+				glRotatef(90, 1.0f, 0.0f, 0.0f);
+				glTranslatef(-4.1f, 0.0f, 4.3f);
+				thrusterfire();
+			glPopMatrix();
+		}
 	glPopMatrix();
 
 	//--------tyre------------
@@ -3393,6 +3480,16 @@ void right_leg()
 			glTranslatef(3.6f, -3.7f, 0.0f);
 			thrusterjoint3();
 		glPopMatrix();
+
+		if ((activatethrustergo == 1 || activatethrustergo == 2) && movey != 0)
+		{
+			glPushMatrix();
+				glRotatef(90, 1.0f, 0.0f, 0.0f);
+				glTranslatef(4.1f, 0.0f, 4.3f);
+				thrusterfire();
+			glPopMatrix();
+		}
+		
 	glPopMatrix();
 
 	//----------------tyre----------------
@@ -4042,6 +4139,28 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		{
 			handmove = 0;
 			activatehand = 0;
+		}
+		//--------------------------------------
+
+		//thruster------------------------------
+		if (activatethrustergo == 1)
+		{
+			movey += 0.2;
+		}
+		else if (activatethrustergo == 2)
+		{
+			movey -= 0.2;
+		}
+
+		if (movey >= 30)
+		{
+			movey = 30;
+			activatethrustergo = 0;
+		}
+		else if (movey <= 0.1)
+		{
+			movey = 0;
+			activatethrustergo = 0;
 		}
 		//--------------------------------------
 

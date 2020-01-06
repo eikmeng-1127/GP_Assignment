@@ -63,6 +63,8 @@ int lightswitch = 0;
 int activatelight = 0;
 boolean selectOrtho = true;
 boolean selectPerspective = false;
+boolean disablelighting = false;
+int orthoxd = 30;
 
 boolean rebel = true;
 boolean babyyoda = false;
@@ -93,6 +95,9 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == VK_SPACE)
 		{
 			glLoadIdentity();
+			movex = 0;
+			movey = 0;
+			movez = 0;
 		}
 		else if (wParam == VK_UP)
 		{
@@ -334,6 +339,25 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		else if (wParam == VK_NUMPAD2)
 		{
 			pos[2] -= 0.1;
+		}
+		else if (wParam == VK_NUMPAD3)
+		{
+			if (disablelighting == false)
+			{
+				disablelighting = true;
+			}
+			else
+			{
+				disablelighting = false;
+			}
+		}
+		else if (wParam == VK_ADD)
+		{
+			orthoxd += 10;
+		}
+		else if (wParam == VK_SUBTRACT)
+		{
+			orthoxd -= 10;
 		}
 		break;
 
@@ -3790,6 +3814,161 @@ void display_deathstarplan()
 }
 //----------------------------
 
+void background(float x)
+{
+	glPushMatrix();
+	//glTranslatef(0.0f, -50.0f, 0.0f);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "goldtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+			//top
+			glTexCoord2f(0, 0); glVertex3f(-x, x, -x);
+			glTexCoord2f(0, 1); glVertex3f(-x, x, x);
+			glTexCoord2f(1, 1); glVertex3f(x, x, x);
+			glTexCoord2f(1, 0); glVertex3f(x, x, -x);
+
+			//back
+			//glColor3f(1, 0, 0);
+			glTexCoord2f(1, 0); glVertex3f(x, x, -x);
+			glTexCoord2f(0, 0); glVertex3f(-x, x, -x);
+			glTexCoord2f(0, 1); glVertex3f(-x, -x, -x);
+			glTexCoord2f(1, 1); glVertex3f(x, -x, -x);
+
+			//right
+			//glColor3f(0, 1, 0);
+			glTexCoord2f(1, 1); glVertex3f(x, -x, -x);
+			glTexCoord2f(1, 0); glVertex3f(x, x, -x);
+			glTexCoord2f(0, 0); glVertex3f(x, x, x);
+			glTexCoord2f(0, 1); glVertex3f(x, -x, x);
+
+			//bottom
+			//glColor3f(0, 0, 1);
+			glTexCoord2f(0, 1); glVertex3f(x, -x, x);
+			glTexCoord2f(1, 1); glVertex3f(x, -x, -x);
+			glTexCoord2f(1, 0); glVertex3f(-x, -x, -x);
+			glTexCoord2f(0, 0); glVertex3f(-x, -x, x);
+
+			//left
+			//glColor3f(1, 1, 0);
+			glTexCoord2f(0, 0); glVertex3f(-x, -x, x);
+			glTexCoord2f(1, 0); glVertex3f(-x, -x, -x);
+			glTexCoord2f(1, 1); glVertex3f(-x, x, -x);
+			glTexCoord2f(0, 1); glVertex3f(-x, x, x);
+
+			//front
+			//glColor3f(1, 0, 1);
+			glTexCoord2f(0, 1); glVertex3f(-x, x, x);
+			glTexCoord2f(1, 1); glVertex3f(x, x, x);
+			glTexCoord2f(1, 0); glVertex3f(x, -x, x);
+			glTexCoord2f(0, 0); glVertex3f(-x, -x, x);
+		glEnd();
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+}
+
+void drawSkybox(float x) {
+	glPushMatrix();
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "goldtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+	//BOTTOM
+	glBegin(GL_POLYGON);
+	glTexCoord2f(1, 0);
+	glVertex3f(-x, -x, x);
+	glTexCoord2f(1, 1);
+	glVertex3f(x, -x, x);
+	glTexCoord2f(0, 1);
+	glVertex3f(x, -x, -x);
+	glTexCoord2f(0, 0);
+	glVertex3f(-x, -x, -x);
+	glEnd();
+
+	// TOP
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0, 0);
+	glVertex3f(-x, x, x);
+	glTexCoord2f(1, 0);
+	glVertex3f(x, x, x);
+	glTexCoord2f(1, 1);
+	glVertex3f(x, x, -x);
+	glTexCoord2f(0, 1);
+	glVertex3f(-x, x, -x);
+	glEnd();
+
+	//LEFT
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0, 0);
+	glVertex3f(-x, -x, x);
+	glTexCoord2f(0, 1);
+	glVertex3f(-x, x, x);
+	glTexCoord2f(1, 1);
+	glVertex3f(-x, x, -x);
+	glTexCoord2f(1, 0);
+	glVertex3f(-x, -x, -x);
+	glEnd();
+
+	//RIGHT
+	glBegin(GL_POLYGON);
+	glTexCoord2f(1, 0);
+	glVertex3f(x, -x, x);
+	glTexCoord2f(1, 1);
+	glVertex3f(x, x, x);
+	glTexCoord2f(0, 1);
+	glVertex3f(x, x, -x);
+	glTexCoord2f(0, 0);
+	glVertex3f(x, -x, -x);
+	glEnd();
+
+	//FRONT
+	glBegin(GL_POLYGON);
+	glTexCoord2f(1, 0);
+	glVertex3f(-x, -x, x);
+	glTexCoord2f(0, 0);
+	glVertex3f(x, -x, x);
+	glTexCoord2f(0, 1);
+	glVertex3f(x, x, x);
+	glTexCoord2f(1, 1);
+	glVertex3f(-x, x, x);
+	glEnd();
+
+	//BACK
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0, 0);
+	glVertex3f(-x, -x, -x);
+	glTexCoord2f(1, 0);
+	glVertex3f(x, -x, -x);
+	glTexCoord2f(1, 1);
+	glVertex3f(x, x, -x);
+	glTexCoord2f(0, 1);
+	glVertex3f(-x, x, -x);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
+	glPopMatrix();
+}
+
 void robot()
 {
 	glMatrixMode(GL_MODELVIEW);
@@ -3896,6 +4075,8 @@ void displayrobot()
 	glEnable(GL_DEPTH_TEST);
 
 	robot();
+	background(40.0f);
+	//drawSkybox(40);
 }
 
 void displayrobotwithlighting()
@@ -3915,6 +4096,7 @@ void displayrobotwithlighting()
 	}
 
 	robot();
+	background(40.0f);
 }
 //--------------------------------------------------------------------
 
@@ -3972,7 +4154,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		if (selectOrtho == true) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glOrtho(-12, 12, -12, 12, -20, 20);
+			glOrtho(-orthoxd, orthoxd, -orthoxd, orthoxd, -30, 100);
 		}
 
 		if (selectPerspective == true) {
@@ -4345,6 +4527,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 		else if (activatelight == 1)
 		{
 			displayrobotwithlighting();
+		}
+
+		if (disablelighting == true)
+		{
+			glDisable(GL_LIGHTING);
 		}
 
 		SwapBuffers(hdc);

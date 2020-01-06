@@ -1714,15 +1714,45 @@ void backpackthrustercone()
 //1 polygon
 void gg_mainbarrel() {
 	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 1.5f);
+		glTranslatef(0.0f, 0.0f, 1.5f);
 
-	GLUquadricObj* mainbarrelcylinder = NULL;
-	mainbarrelcylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(mainbarrelcylinder, GLU_FILL);
-	gluCylinder(mainbarrelcylinder, 0.2, 0.2, 5, 20, 5);
-	gluDeleteQuadric(mainbarrelcylinder);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "goldtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* mainbarrelcylinder = NULL;
+		mainbarrelcylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(mainbarrelcylinder, TRUE);
+		gluQuadricDrawStyle(mainbarrelcylinder, GLU_FILL);
+		gluCylinder(mainbarrelcylinder, 0.2, 0.2, 5, 20, 5);
+		gluDeleteQuadric(mainbarrelcylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex1 = 0.0;
+		GLfloat circley1 = 0.0;
+		GLfloat circlerad = 0.2;
+
+		glRotatef(60, 0.0f, 0.0f, 1.0f);
+		glTranslatef(0.0f, 0.0f, 6.5f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(1, 0.8, 0);
+		glVertex2f(circlex1, circley1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
 	glPopMatrix();
 }
 
@@ -1733,14 +1763,30 @@ void gg_sidebarrels() {
 	for (int i = 0; i <= 6; i++) {
 		glRotatef(60, 0.0f, 0.0f, 1.0f);
 		glPushMatrix();
-		glTranslatef(0.0f, 0.5f, 0.0f);
-		GLUquadricObj* sidebarrelcylinder = NULL;
-		sidebarrelcylinder = gluNewQuadric();
-		glColor3f(1, 0.5, 1);
-		//gluQuadricTexture(cylinder, TRUE);
-		gluQuadricDrawStyle(sidebarrelcylinder, GLU_FILL);
-		gluCylinder(sidebarrelcylinder, 0.2, 0.2, 5, 20, 5);
-		gluDeleteQuadric(sidebarrelcylinder);
+			glTranslatef(0.0f, 0.5f, 0.0f);
+			GLUquadricObj* sidebarrelcylinder = NULL;
+			sidebarrelcylinder = gluNewQuadric();
+			glColor3f(0.4, 0.4, 0.4);
+			//gluQuadricTexture(cylinder, TRUE);
+			gluQuadricDrawStyle(sidebarrelcylinder, GLU_FILL);
+			gluCylinder(sidebarrelcylinder, 0.2, 0.2, 5, 20, 5);
+			gluDeleteQuadric(sidebarrelcylinder);
+		glPopMatrix();
+
+		glPushMatrix();
+			GLfloat circlex1 = 0.0;
+			GLfloat circley1 = 0.0;
+			GLfloat circlerad = 0.2;
+
+			glRotatef(60, 0.0f, 0.0f, 1.0f);
+			glTranslatef(0.0f, 0.5f, 1.1f);
+			glBegin(GL_TRIANGLE_FAN);
+			glColor3f(0.4, 0.4, 0.4);
+			glVertex2f(circlex1, circley1);
+			for (int i = 0; i <= triangleAmount; i++) {
+				glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
+			}
+			glEnd();
 		glPopMatrix();
 	}
 	glPopMatrix();
@@ -1749,15 +1795,29 @@ void gg_sidebarrels() {
 //1 polygon
 void gg_barrelholder() {
 	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 6.0f);
+		glTranslatef(0.0f, 0.0f, 6.0f);
 
-	GLUquadricObj* barrelholdercylinder = NULL;
-	barrelholdercylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(barrelholdercylinder, GLU_FILL);
-	gluCylinder(barrelholdercylinder, 0.75, 0.75, 0.5, 20, 5);
-	gluDeleteQuadric(barrelholdercylinder);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "battlescarredtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* barrelholdercylinder = NULL;
+		barrelholdercylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(barrelholdercylinder, TRUE);
+		gluQuadricDrawStyle(barrelholdercylinder, GLU_FILL);
+		gluCylinder(barrelholdercylinder, 0.75, 0.75, 0.5, 20, 5);
+		gluDeleteQuadric(barrelholdercylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 
@@ -1775,15 +1835,59 @@ void gg_barrels() {
 //1 polygon
 void gg_body() {
 	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 1.0f);
+		glTranslatef(0.0f, 0.0f, 1.0f);
 
-	GLUquadricObj* gunbodycylinder = NULL;
-	gunbodycylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(gunbodycylinder, GLU_FILL);
-	gluCylinder(gunbodycylinder, 0.75, 0.75, 2, 20, 5);
-	gluDeleteQuadric(gunbodycylinder);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "scratchedmetaltexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* gunbodycylinder = NULL;
+		gunbodycylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(gunbodycylinder, TRUE);
+		gluQuadricDrawStyle(gunbodycylinder, GLU_FILL);
+		gluCylinder(gunbodycylinder, 0.75, 0.75, 2, 20, 5);
+		gluDeleteQuadric(gunbodycylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex1 = 0.0;
+		GLfloat circley1 = 0.0;
+		GLfloat circlerad = 0.75;
+
+		glTranslatef(0.0f, 0.0f, 3.0f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(circlex1, circley1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
+	glPopMatrix();
+
+	glPushMatrix();
+		GLfloat circlex2 = 0.0;
+		GLfloat circley2 = 0.0;
+		GLfloat circlerad2 = 0.75;
+
+		glTranslatef(0.0f, 0.0f, 1.0f);
+		glBegin(GL_TRIANGLE_FAN);
+		glColor3f(0.3, 0.3, 0.3);
+		glVertex2f(circlex1, circley1);
+		for (int i = 0; i <= triangleAmount; i++) {
+			glVertex2f(circlex2 + (circlerad2 * cos(i * twopi / triangleAmount)), circley2 + (circlerad2 * sin(i * twopi / triangleAmount)));
+		}
+		glEnd();
 	glPopMatrix();
 }
 
@@ -1791,25 +1895,54 @@ void gg_body() {
 void gg_connnector() {
 	glPushMatrix();
 
-	GLUquadricObj* gunconnectorcylinder = NULL;
-	gunconnectorcylinder = gluNewQuadric();
-	glColor3f(1, 0, 1);
-	//gluQuadricTexture(cylinder, TRUE);
-	gluQuadricDrawStyle(gunconnectorcylinder, GLU_FILL);
-	gluCylinder(gunconnectorcylinder, 0.5, 0.5, 2, 20, 5);
-	gluDeleteQuadric(gunconnectorcylinder);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "mechanictexture2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
+		GLUquadricObj* gunconnectorcylinder = NULL;
+		gunconnectorcylinder = gluNewQuadric();
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(gunconnectorcylinder, TRUE);
+		gluQuadricDrawStyle(gunconnectorcylinder, GLU_FILL);
+		gluCylinder(gunconnectorcylinder, 0.5, 0.5, 2, 20, 5);
+		gluDeleteQuadric(gunconnectorcylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 
 //1 polygon
 void gg_head()
 {
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "robottexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	GetObject(hBMP, sizeof(BMP), &BMP);
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 	GLUquadricObj* gunheadsphere = NULL;
 	gunheadsphere = gluNewQuadric();
-	glColor3f(0, 0, 1);
+	glColor3f(1, 1, 1);
+	gluQuadricTexture(gunheadsphere, TRUE);
 	gluQuadricDrawStyle(gunheadsphere, GLU_FILL);
 	gluSphere(gunheadsphere, 0.9, 20, 10);
 	gluDeleteQuadric(gunheadsphere);
+
+	glDisable(GL_TEXTURE_2D);
+	DeleteObject(hBMP);
+	glDeleteTextures(1, &texture);
 }
 
 void gatlingGun() {
@@ -1831,13 +1964,27 @@ void lightercylinder()
 		glRotatef(90.0, 0.0f, 1.0f, 0.0f);
 		glTranslatef(-2.1f, -0.5f, -1.6f);
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "mechanictexture2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 		GLUquadricObj* thrustercylinder = NULL;
 		thrustercylinder = gluNewQuadric();
-		glColor3f(0.4, 0.4, 0.4);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(thrustercylinder, TRUE);
 		gluQuadricDrawStyle(thrustercylinder, GLU_FILL);
 		gluCylinder(thrustercylinder, 0.1, 0.1, 3.2, 20, 5);
 		gluDeleteQuadric(thrustercylinder);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 
@@ -2350,13 +2497,27 @@ void lightsaber_main()
 		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -1.5f);
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "goldtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 		GLUquadricObj* lsmain = NULL;
 		lsmain = gluNewQuadric();
-		glColor3f(1, 1, 0);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lsmain, TRUE);
 		gluQuadricDrawStyle(lsmain, GLU_FILL);
 		gluCylinder(lsmain, 0.15, 0.15, 3.5, 20, 5);
 		gluDeleteQuadric(lsmain);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 }
 
@@ -2366,13 +2527,27 @@ void lightsaber_grip()
 		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, 0.1f);
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "silvertexture2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 		GLUquadricObj* lsgrip = NULL;
 		lsgrip = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lsgrip, TRUE);
 		gluQuadricDrawStyle(lsgrip, GLU_FILL);
 		gluCylinder(lsgrip, 0.2, 0.2, 2.0, 20, 5);
 		gluDeleteQuadric(lsgrip);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -2383,7 +2558,7 @@ void lightsaber_grip()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, 2.1f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circlex1, circley1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
@@ -2399,7 +2574,7 @@ void lightsaber_grip()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, 0.1f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circlex2, circley2);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circlex2 + (circlerad2 * cos(i * twopi / triangleAmount)), circley2 + (circlerad2 * sin(i * twopi / triangleAmount)));
@@ -2414,13 +2589,27 @@ void lightsaber_cap()
 		glRotatef(270.0, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, 1.0f);
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "silvertexture2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 		GLUquadricObj* lscap = NULL;
 		lscap = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lscap, TRUE);
 		gluQuadricDrawStyle(lscap, GLU_FILL);
 		gluCylinder(lscap, 0.2, 0.3, 0.5, 20, 5);
 		gluDeleteQuadric(lscap);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -2431,7 +2620,7 @@ void lightsaber_cap()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -1.5f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circlex1, circley1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circlex1 + (circlerad * cos(i * twopi / triangleAmount)), circley1 + (circlerad * sin(i * twopi / triangleAmount)));
@@ -2446,13 +2635,27 @@ void lightsaber_centergrip()
 		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -0.9f);
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "silvertexture2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 		GLUquadricObj* lsgrip = NULL;
 		lsgrip = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lsgrip, TRUE);
 		gluQuadricDrawStyle(lsgrip, GLU_FILL);
 		gluCylinder(lsgrip, 0.2, 0.2, 0.2, 20, 5);
 		gluDeleteQuadric(lsgrip);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -2463,7 +2666,7 @@ void lightsaber_centergrip()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -0.9f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circleupperx1, circleuppery1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circleupperx1 + (circlerad * cos(i * twopi / triangleAmount)), circleuppery1 + (circlerad * sin(i * twopi / triangleAmount)));
@@ -2479,7 +2682,7 @@ void lightsaber_centergrip()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -0.7f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circlelowerx1, circlelowery1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circlelowerx1 + (circlerad2 * cos(i * twopi / triangleAmount)), circlelowery1 + (circlerad2 * sin(i * twopi / triangleAmount)));
@@ -2494,13 +2697,27 @@ void lightsaber_centergrip2()
 		glRotatef(90.0, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -0.6f);
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "silvertexture2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+
 		GLUquadricObj* lsgrip2 = NULL;
 		lsgrip2 = gluNewQuadric();
-		glColor3f(0, 1, 0);
-		//gluQuadricTexture(cylinder, TRUE);
+		glColor3f(1, 1, 1);
+		gluQuadricTexture(lsgrip2, TRUE);
 		gluQuadricDrawStyle(lsgrip2, GLU_FILL);
 		gluCylinder(lsgrip2, 0.2, 0.2, 0.2, 20, 5);
 		gluDeleteQuadric(lsgrip2);
+
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -2511,7 +2728,7 @@ void lightsaber_centergrip2()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -0.6f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circleupperx1, circleuppery1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circleupperx1 + (circlerad * cos(i * twopi / triangleAmount)), circleuppery1 + (circlerad * sin(i * twopi / triangleAmount)));
@@ -2527,7 +2744,7 @@ void lightsaber_centergrip2()
 		glRotatef(90, 1.0f, 0.0f, 0.0f);
 		glTranslatef(0.0f, 0.0f, -0.4f);
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3f(0.75, 0.75, 0.75);
 		glVertex2f(circlelowerx1, circlelowery1);
 		for (int i = 0; i <= triangleAmount; i++) {
 			glVertex2f(circlelowerx1 + (circlerad2 * cos(i * twopi / triangleAmount)), circlelowery1 + (circlerad2 * sin(i * twopi / triangleAmount)));
@@ -3369,7 +3586,7 @@ void display()
 				glPushMatrix();
 					glRotatef(rotatehead, 0.0f, 1.0f, 0.0f);
 					head_combined();
-					//gatlingGun();
+					gatlingGun();
 					if (activatedeathstarplan == 1)
 					{
 						display_deathstarplan();

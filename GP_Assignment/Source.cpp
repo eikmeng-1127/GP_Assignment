@@ -98,6 +98,7 @@ LRESULT WINAPI WindowProcedure(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			movex = 0;
 			movey = 0;
 			movez = 0;
+			rotater2 = 0;
 		}
 		else if (wParam == VK_UP)
 		{
@@ -3817,9 +3818,8 @@ void display_deathstarplan()
 void background(float x)
 {
 	glPushMatrix();
-	//glTranslatef(0.0f, -50.0f, 0.0f);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "goldtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "sky2.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 		GetObject(hBMP, sizeof(BMP), &BMP);
 		glEnable(GL_TEXTURE_2D);
 		glGenTextures(1, &texture);
@@ -3878,94 +3878,142 @@ void background(float x)
 	glPopMatrix();
 }
 
-void drawSkybox(float x) {
+void background2(float x)
+{
 	glPushMatrix();
+	glTranslatef(0.0f, 20.0f, 0.0f);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "desertsky_up.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-	hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "goldtexture.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-	GetObject(hBMP, sizeof(BMP), &BMP);
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+		glColor3f(1, 1, 1);
+			glBegin(GL_POLYGON);
+				//top
+				glTexCoord2f(0, 1); glVertex3f(-x, x, -x);
+				glTexCoord2f(1, 1); glVertex3f(-x, x, x);
+				glTexCoord2f(1, 0); glVertex3f(x, x, x);
+				glTexCoord2f(0, 0); glVertex3f(x, x, -x);
 
-	//BOTTOM
-	glBegin(GL_POLYGON);
-	glTexCoord2f(1, 0);
-	glVertex3f(-x, -x, x);
-	glTexCoord2f(1, 1);
-	glVertex3f(x, -x, x);
-	glTexCoord2f(0, 1);
-	glVertex3f(x, -x, -x);
-	glTexCoord2f(0, 0);
-	glVertex3f(-x, -x, -x);
-	glEnd();
+			glEnd();
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 
-	// TOP
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0, 0);
-	glVertex3f(-x, x, x);
-	glTexCoord2f(1, 0);
-	glVertex3f(x, x, x);
-	glTexCoord2f(1, 1);
-	glVertex3f(x, x, -x);
-	glTexCoord2f(0, 1);
-	glVertex3f(-x, x, -x);
-	glEnd();
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "desertsky_bk.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 
-	//LEFT
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0, 0);
-	glVertex3f(-x, -x, x);
-	glTexCoord2f(0, 1);
-	glVertex3f(-x, x, x);
-	glTexCoord2f(1, 1);
-	glVertex3f(-x, x, -x);
-	glTexCoord2f(1, 0);
-	glVertex3f(-x, -x, -x);
-	glEnd();
+			glBegin(GL_POLYGON);
+				//back
+				//glColor3f(1, 0, 0);
+				glTexCoord2f(1, 1); glVertex3f(x, x, -x);
+				glTexCoord2f(0, 1); glVertex3f(-x, x, -x);
+				glTexCoord2f(0, 0); glVertex3f(-x, -x, -x);
+				glTexCoord2f(1, 0); glVertex3f(x, -x, -x);
+			glEnd();
 
-	//RIGHT
-	glBegin(GL_POLYGON);
-	glTexCoord2f(1, 0);
-	glVertex3f(x, -x, x);
-	glTexCoord2f(1, 1);
-	glVertex3f(x, x, x);
-	glTexCoord2f(0, 1);
-	glVertex3f(x, x, -x);
-	glTexCoord2f(0, 0);
-	glVertex3f(x, -x, -x);
-	glEnd();
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
 
-	//FRONT
-	glBegin(GL_POLYGON);
-	glTexCoord2f(1, 0);
-	glVertex3f(-x, -x, x);
-	glTexCoord2f(0, 0);
-	glVertex3f(x, -x, x);
-	glTexCoord2f(0, 1);
-	glVertex3f(x, x, x);
-	glTexCoord2f(1, 1);
-	glVertex3f(-x, x, x);
-	glEnd();
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "desertsky_rt.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
 
-	//BACK
-	glBegin(GL_POLYGON);
-	glTexCoord2f(0, 0);
-	glVertex3f(-x, -x, -x);
-	glTexCoord2f(1, 0);
-	glVertex3f(x, -x, -x);
-	glTexCoord2f(1, 1);
-	glVertex3f(x, x, -x);
-	glTexCoord2f(0, 1);
-	glVertex3f(-x, x, -x);
-	glEnd();
+			glBegin(GL_POLYGON);
+				//right
+				//glColor3f(0, 1, 0);
+				glTexCoord2f(0, 0); glVertex3f(x, -x, -x);
+				glTexCoord2f(0, 1); glVertex3f(x, x, -x);
+				glTexCoord2f(1, 1); glVertex3f(x, x, x);
+				glTexCoord2f(1, 0); glVertex3f(x, -x, x);
+			glEnd();
 
-	glDisable(GL_TEXTURE_2D);
-	DeleteObject(hBMP);
-	glDeleteTextures(1, &texture);
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "desertsky_dn.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+			glBegin(GL_POLYGON);
+				//bottom
+				//glColor3f(0, 0, 1);
+				glTexCoord2f(1, 1); glVertex3f(x, -x, x);
+				glTexCoord2f(0, 1); glVertex3f(x, -x, -x);
+				glTexCoord2f(0, 0); glVertex3f(-x, -x, -x);
+				glTexCoord2f(1, 0); glVertex3f(-x, -x, x);
+			glEnd();
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "desertsky_lf.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+			glBegin(GL_POLYGON);
+				//left
+				//glColor3f(1, 1, 0);
+				glTexCoord2f(0, 0); glVertex3f(-x, -x, x);
+				glTexCoord2f(1, 0); glVertex3f(-x, -x, -x);
+				glTexCoord2f(1, 1); glVertex3f(-x, x, -x);
+				glTexCoord2f(0, 1); glVertex3f(-x, x, x);
+			glEnd();
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		hBMP = (HBITMAP)LoadImage(GetModuleHandle(NULL), "desertsky_ft.bmp", IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		GetObject(hBMP, sizeof(BMP), &BMP);
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);//type of texture, what filter used?magnified?,minimize?,
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, BMP.bmWidth, BMP.bmHeight, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, BMP.bmBits);
+			glBegin(GL_POLYGON);
+				//front
+				//glColor3f(1, 0, 1);
+				glTexCoord2f(1, 1); glVertex3f(-x, x, x);
+				glTexCoord2f(0, 1); glVertex3f(x, x, x);
+				glTexCoord2f(0, 0); glVertex3f(x, -x, x);
+				glTexCoord2f(1, 0); glVertex3f(-x, -x, x);
+			glEnd();
+		glDisable(GL_TEXTURE_2D);
+		DeleteObject(hBMP);
+		glDeleteTextures(1, &texture);
+
 	glPopMatrix();
 }
 
@@ -4075,8 +4123,16 @@ void displayrobot()
 	glEnable(GL_DEPTH_TEST);
 
 	robot();
-	background(40.0f);
-	//drawSkybox(40);
+
+	if (selectOrtho == true)
+	{
+		background(50.0f);
+	}
+	
+	if (selectPerspective == true)
+	{
+		background2(50.0f);
+	}
 }
 
 void displayrobotwithlighting()
@@ -4155,6 +4211,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int nCmdShow)
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(-orthoxd, orthoxd, -orthoxd, orthoxd, -30, 100);
+
 		}
 
 		if (selectPerspective == true) {
